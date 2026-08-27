@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ES Practice Books</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#101a33">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+// ── Paste your Supabase project values here (Settings → API in the Supabase dashboard) ──
+const SUPABASE_URL = "https://noupjqvinpanogkybnxd.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_qrsHTOkBJWQMzMbegAojAg_geD3jDZF";
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#101a33;--navy-2:#182548;--cream:#f7f3ea;--cream-2:#efe9db;--paper:#fffdf8;
+  --au:#c8952a;--au-2:#d9a747;--au-3:#efd183;
+  --ink:#141a2b;--ink-2:#4a5166;--ink-3:#8a90a3;--rule:#d9d2c1;
+  --ok:#2f7a5b;--warn:#b7791f;--bad:#b3403f;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--cream);color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.num{font-family:"Playfair Display",serif;font-variant-numeric:lining-nums tabular-nums}
+.mono{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.02em}
+header{background:var(--navy);color:var(--cream);padding:28px 40px 22px;position:relative;overflow:hidden}
+header:after{content:"";position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;border:1px solid rgba(217,167,71,.25);pointer-events:none}
+header:before{content:"";position:absolute;right:20px;top:20px;width:120px;height:120px;border-radius:50%;border:1px solid rgba(217,167,71,.35);pointer-events:none}
+.eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--au-2)}
+header h1{font-family:"Playfair Display",serif;font-weight:600;font-size:30px;margin-top:6px;letter-spacing:-.01em}
+header h1 em{font-style:italic;font-weight:400;color:var(--au-3)}
+header p{color:#b9c0d4;max-width:640px;margin-top:6px;font-size:13px}
+.hdr-right{position:absolute;right:40px;top:30px;text-align:right;z-index:2}
+.hdr-right .ty{font-family:"Playfair Display",serif;font-size:22px;color:var(--au-3);font-variant-numeric:lining-nums}
+.hdr-right .lbl{font-size:11px;color:#b9c0d4}
+.sync{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:#b9c0d4;margin-top:8px;display:flex;gap:6px;align-items:center;justify-content:flex-end}
+.sync i{width:7px;height:7px;border-radius:50%;background:var(--rule);display:inline-block}
+.sync.ok i{background:#34d399}.sync.busy i{background:var(--au-2)}.sync.off i{background:#fb7185}
+.sync button{background:none;border:0;color:var(--au-3);cursor:pointer;font:inherit;text-decoration:underline;padding:0}
+#gate{position:fixed;inset:0;background:var(--navy);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
+#gate .box{background:var(--paper);border-radius:8px;padding:30px 28px;max-width:400px;width:100%}
+#gate h2{font-size:24px}#gate p{color:var(--ink-2);margin:6px 0 16px;font-size:13px}
+#gate .btn{width:100%;margin-top:10px}
+#gate .msg{font-size:12px;margin-top:10px;color:var(--ink-2)}
+nav{display:flex;gap:2px;background:var(--navy-2);padding:0 40px;border-bottom:1px solid rgba(217,167,71,.3)}
+nav button{background:none;border:0;color:#b9c0d4;padding:13px 16px;font:500 13px Inter,sans-serif;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+nav button:hover{color:var(--cream)}
+nav button.on{color:var(--au-3);border-bottom-color:var(--au-2)}
+nav button:focus-visible{outline:2px solid var(--au-2);outline-offset:-2px}
+main{padding:28px 40px 60px;max-width:1240px}
+.screen{display:none}.screen.on{display:block}
+h2{font-family:"Playfair Display",serif;font-weight:600;font-size:22px;letter-spacing:-.01em;margin-bottom:4px}
+.sub{color:var(--ink-2);margin-bottom:18px;max-width:720px}
+.sec{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--au);display:flex;align-items:center;gap:14px;margin:26px 0 12px}
+.sec:after{content:"";flex:1;height:1px;background:var(--rule)}
+.grid{display:grid;gap:14px}
+.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:900px){.g4,.g3,.g2{grid-template-columns:1fr 1fr}main,header,nav{padding-left:18px;padding-right:18px}.hdr-right{display:none}}
+@media(max-width:600px){.g4,.g3,.g2{grid-template-columns:1fr}}
+.card{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:16px 18px;box-shadow:0 1px 2px rgba(16,26,51,.05)}
+.card .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3)}
+.card .v{font-family:"Playfair Display",serif;font-size:26px;font-variant-numeric:lining-nums tabular-nums;margin-top:2px}
+.card .n{font-size:12px;color:var(--ink-2);margin-top:4px}
+.qs{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--paper)}
+.q{padding:16px 18px;border-right:1px solid var(--rule);position:relative}
+.q:last-child{border-right:0}
+.q .qn{font-family:"Playfair Display",serif;font-size:13px;font-style:italic;color:var(--ink-3)}
+.q .qp{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink-2);margin-top:2px}
+.q .qv{font-family:"Playfair Display",serif;font-size:22px;font-variant-numeric:lining-nums tabular-nums;margin-top:8px}
+.q .qd{font-size:12px;margin-top:6px;display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.dot.ok{background:var(--ok)}.dot.warn{background:var(--warn)}.dot.bad{background:var(--bad)}.dot.na{background:var(--rule)}
+.q.cur{background:linear-gradient(180deg,#fff9e8,var(--paper))}
+.q.cur:before{content:"";position:absolute;left:0;top:0;right:0;height:2px;background:var(--au-2)}
+@media(max-width:700px){.qs{grid-template-columns:1fr 1fr}.q{border-bottom:1px solid var(--rule)}}
+table{width:100%;border-collapse:collapse;background:var(--paper);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);background:var(--cream-2);font-weight:600}
+td{padding:9px 12px;border-bottom:1px solid #ece6d8;vertical-align:middle}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right}
+td.amt{font-family:"Playfair Display",serif;font-variant-numeric:lining-nums tabular-nums;font-size:15px}
+tbody tr:hover{background:#fbf8f0}
+.form{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end;background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:14px 16px;margin-bottom:14px}
+.form.f5{grid-template-columns:repeat(5,1fr)}
+@media(max-width:900px){.form,.form.f5{grid-template-columns:1fr 1fr}}
+label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin-bottom:4px}
+input,select,textarea{width:100%;font:14px Inter,sans-serif;padding:8px 10px;border:1px solid var(--rule);border-radius:4px;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--au-2);outline-offset:-1px;border-color:var(--au)}
+input[type=number]{font-variant-numeric:tabular-nums}
+.btn{font:600 13px Inter,sans-serif;padding:9px 16px;border-radius:4px;border:1px solid var(--navy);background:var(--navy);color:var(--cream);cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--navy-2)}
+.btn.gold{background:var(--au);border-color:var(--au);color:var(--navy)}
+.btn.gold:hover{background:var(--au-2)}
+.btn.ghost{background:transparent;color:var(--navy)}
+.btn.ghost:hover{background:var(--cream-2)}
+.btn.sm{padding:5px 10px;font-size:12px}
+.btn:focus-visible{outline:2px solid var(--au-2);outline-offset:2px}
+.x{background:none;border:0;color:var(--ink-3);cursor:pointer;font-size:16px;line-height:1;padding:2px 6px}
+.x:hover{color:var(--bad)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tag{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:10.5px;padding:2px 7px;border-radius:3px;background:var(--cream-2);color:var(--ink-2)}
+.tag.no{background:#f6e4e4;color:var(--bad)}
+.note{background:#fff9e8;border-left:3px solid var(--au-2);padding:12px 14px;border-radius:0 4px 4px 0;font-size:13px;color:var(--ink-2);margin:12px 0}
+.note b{color:var(--ink)}
+.empty{padding:26px;text-align:center;color:var(--ink-3);font-size:13px}
+.guide p{max-width:720px;margin-bottom:10px;color:var(--ink-2)}
+.guide h3{font-family:"Playfair Display",serif;font-weight:600;font-size:16px;margin:18px 0 6px}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #ece6d8;max-width:760px}
+.chk input{width:16px;height:16px;margin-top:3px;flex:none}
+.chk span{color:var(--ink-2)}
+.chk input:checked+span{color:var(--ink-3);text-decoration:line-through}
+.bar{height:6px;background:var(--cream-2);border-radius:3px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--au-2)}
+footer{padding:16px 40px;color:var(--ink-3);font-size:11.5px;border-top:1px solid var(--rule)}
+@media(prefers-reduced-motion:no-preference){.card,.q{transition:box-shadow .15s}}
+@media print{header,nav,.form,.btn,.x,footer{display:none!important}main{padding:0}.screen{display:block!important;page-break-after:always}}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Edginton Stanley · Sole-trader records</div>
+  <h1>Practice Books <em>for MTD</em></h1>
+  <p>Digital records for your self-employed adviser income and expenses, kept the way HMRC now requires: every transaction, dated and categorised, summarised by quarter for your accountant.</p>
+  <div class="hdr-right"><div class="ty num" id="hdTY">2026/27</div><div class="lbl">tax year in view</div><div class="sync" id="sync"><i></i><span id="syncT">local only</span></div></div>
+</header>
+<nav>
+  <button class="on" data-s="dash">Overview</button>
+  <button data-s="inc">Income</button>
+  <button data-s="exp">Expenses</button>
+  <button data-s="mil">Mileage</button>
+  <button data-s="qtr">Quarterly summary</button>
+  <button data-s="guide">What to claim</button>
+  <button data-s="set">Settings &amp; backup</button>
+</nav>
+<div id="gate" style="display:none"><div class="box">
+  <div class="eyebrow">Edginton Stanley</div>
+  <h2 style="font-family:'Playfair Display',serif">Practice Books</h2>
+  <p>Sign in with your email. You'll get a link; no password to remember.</p>
+  <label>Email</label><input type="email" id="gEmail" placeholder="you@example.com" autocomplete="email">
+  <button class="btn gold" onclick="sendLink()">Send sign-in link</button>
+  <div class="msg" id="gMsg"></div>
+</div></div>
+<main>
+
+<!-- OVERVIEW -->
+<section class="screen on" id="s-dash">
+  <h2>Where you stand</h2>
+  <p class="sub">Your position for the tax year in view. Figures update as you add records. Tax shown is an estimate for budgeting; your accountant's figure is the one that counts.</p>
+  <div class="grid g4">
+    <div class="card"><div class="k">Gross fee income</div><div class="v" id="dIncome">£0</div><div class="n">turnover before expenses</div></div>
+    <div class="card"><div class="k">Allowable expenses</div><div class="v" id="dExp">£0</div><div class="n" id="dExpN">incl. mileage and home working</div></div>
+    <div class="card"><div class="k">Taxable profit</div><div class="v" id="dProfit">£0</div><div class="n">income less allowable expenses</div></div>
+    <div class="card"><div class="k">Estimated tax &amp; NI to set aside</div><div class="v" id="dTax">£0</div><div class="n" id="dTaxN">income tax + Class 4 NI</div></div>
+  </div>
+  <div class="sec">MTD quarters</div>
+  <div class="qs" id="qStrip"></div>
+  <div class="note" id="mtdNote"></div>
+  <div class="sec">Ask your accountant</div>
+  <div id="chkList"></div>
+</section>
+
+<!-- INCOME -->
+<section class="screen" id="s-inc">
+  <h2>Income</h2>
+  <p class="sub">Every payment you receive as a self-employed adviser: SJP fee statements, practice payments, bonuses. Record the gross amount on the date it hits your account.</p>
+  <div class="form f5">
+    <div><label>Date received</label><input type="date" id="iDate"></div>
+    <div><label>Source</label><select id="iSrc"><option>SJP fee statement</option><option>Practice payment</option><option>Bonus / incentive</option><option>Other income</option></select></div>
+    <div><label>Description</label><input id="iDesc" placeholder="e.g. Fee statement, Aug 2026"></div>
+    <div><label>Gross amount £</label><input type="number" id="iAmt" step="0.01" min="0" placeholder="0.00"></div>
+    <div><button class="btn gold" onclick="addIncome()">Add income</button></div>
+  </div>
+  <table><thead><tr><th>Date</th><th>Source</th><th>Description</th><th class="r">Amount</th><th></th></tr></thead><tbody id="incBody"></tbody></table>
+</section>
+
+<!-- EXPENSES -->
+<section class="screen" id="s-exp">
+  <h2>Expenses</h2>
+  <p class="sub">Only costs incurred wholly and exclusively for the business. Mileage goes on its own tab. If a category shows <span class="tag no">not deductible</span>, record it anyway so your accountant can see it, but it won't reduce your tax.</p>
+  <div class="form">
+    <div><label>Date</label><input type="date" id="eDate"></div>
+    <div><label>Category</label><select id="eCat"></select></div>
+    <div><label>Paid to</label><input id="ePayee" placeholder="e.g. CII"></div>
+    <div><label>Description</label><input id="eDesc" placeholder="e.g. PFS membership 2026"></div>
+    <div><label>Amount £</label><input type="number" id="eAmt" step="0.01" min="0" placeholder="0.00"></div>
+    <div><button class="btn gold" onclick="addExpense()">Add expense</button></div>
+  </div>
+  <div class="row" style="margin-bottom:10px"><label style="margin:0">Filter</label><select id="eFilter" style="width:auto" onchange="render()"><option value="">All categories</option></select></div>
+  <table><thead><tr><th>Date</th><th>Category</th><th>Paid to</th><th>Description</th><th class="r">Amount</th><th></th></tr></thead><tbody id="expBody"></tbody></table>
+</section>
+
+<!-- MILEAGE -->
+<section class="screen" id="s-mil">
+  <h2>Mileage</h2>
+  <p class="sub">Business journeys only: client meetings, professional connections, seminars, training. Your regular trip to the Royston office is commuting and does not count. HMRC's simplified rate is 45p per mile for the first 10,000 business miles in the tax year, then 25p.</p>
+  <div class="grid g3" style="margin-bottom:14px">
+    <div class="card"><div class="k">Business miles this year</div><div class="v" id="mMiles">0</div><div class="bar"><i id="mBar" style="width:0%"></i></div><div class="n" id="mBarN">of 10,000 at 45p</div></div>
+    <div class="card"><div class="k">Mileage allowance</div><div class="v" id="mAllow">£0</div><div class="n">claimable expense</div></div>
+    <div class="card"><div class="k">Journeys logged</div><div class="v" id="mCount">0</div><div class="n">keep it contemporaneous</div></div>
+  </div>
+  <div class="form">
+    <div><label>Date</label><input type="date" id="mDate"></div>
+    <div><label>From</label><input id="mFrom" placeholder="Royston"></div>
+    <div><label>To</label><input id="mTo" placeholder="Hitchin"></div>
+    <div><label>Purpose / who</label><input id="mWhy" placeholder="Client review, J. Smith"></div>
+    <div><label>Miles (round trip)</label><input type="number" id="mMi" step="0.1" min="0" placeholder="0"></div>
+    <div><button class="btn gold" onclick="addTrip()">Add journey</button></div>
+  </div>
+  <table><thead><tr><th>Date</th><th>From</th><th>To</th><th>Purpose</th><th class="r">Miles</th><th class="r">Allowance</th><th></th></tr></thead><tbody id="milBody"></tbody></table>
+</section>
+
+<!-- QUARTERLY -->
+<section class="screen" id="s-qtr">
+  <h2>Quarterly summary</h2>
+  <p class="sub">What your accountant needs to submit each MTD quarterly update, mapped to HMRC's self-employment categories. Export the CSV and send it before the due date.</p>
+  <div class="row" style="margin-bottom:14px">
+    <label style="margin:0">Quarter</label><select id="qSel" style="width:auto" onchange="render()"></select>
+    <button class="btn" onclick="exportQuarterCSV()">Export this quarter (CSV)</button>
+    <button class="btn ghost" onclick="exportYearCSV()">Export full year (CSV)</button>
+    <button class="btn ghost" onclick="window.print()">Print</button>
+  </div>
+  <div class="grid g3" style="margin-bottom:14px">
+    <div class="card"><div class="k">Quarter income</div><div class="v" id="qInc">£0</div></div>
+    <div class="card"><div class="k">Quarter expenses</div><div class="v" id="qExp">£0</div><div class="n">incl. mileage, excl. non-deductible</div></div>
+    <div class="card"><div class="k">Status</div><div class="v" id="qStat" style="font-size:18px">—</div><div class="n" id="qDue"></div></div>
+  </div>
+  <table><thead><tr><th>HMRC category</th><th>Your categories</th><th class="r">Amount</th></tr></thead><tbody id="qBody"></tbody></table>
+  <div class="note"><b>How to use this.</b> Send the CSV to NB Accounting with a one-line note: "Q<span id="qN">1</span> figures for MTD update, all transactions attached." They submit through their software; you don't need your own MTD software as long as they're authorised as your agent and you keep these records.</div>
+</section>
+
+<!-- GUIDE -->
+<section class="screen guide" id="s-guide">
+  <h2>What to claim as an SJP adviser</h2>
+  <p class="sub">The short, honest list for a self-employed adviser with a small cost base. The test for everything is "wholly and exclusively for the business".</p>
+  <h3>Almost certainly your biggest claim</h3>
+  <p><b>Mileage.</b> 45p a mile to 10,000 business miles, 25p after. Every client visit, introducer meeting, seminar, networking event. Not your commute. Log it the same day; a reconstructed log at year end is the first thing HMRC challenges.</p>
+  <h3>Straightforward</h3>
+  <p><b>Professional fees and training.</b> CII/PFS membership, exam entries, study materials, CPD events. Training that maintains or updates your existing skills is deductible; training that qualifies you for a wholly new trade is not, but for an adviser doing adviser exams that distinction is rarely a problem.</p>
+  <p><b>Regulatory and practice costs you personally bear.</b> If the practice recharges you for anything (software licences, PI contribution, marketing) it's deductible. If the practice pays it, it isn't yours to claim.</p>
+  <p><b>Phone and internet.</b> The business proportion. Be honest and consistent: if it's 60%, claim 60% every month.</p>
+  <p><b>Home working.</b> The flat rate is simplest: £10 a month for 25–50 hours, £18 for 51–100, £26 for 101+. Set it in Settings and it's added automatically. If you have a dedicated office and significant costs, an actual-cost apportionment may be higher; ask NB.</p>
+  <p><b>Travel other than by car.</b> Train fares, parking, tolls, taxis on business journeys. Parking fines never.</p>
+  <p><b>Subsistence.</b> Reasonable meals only when travelling away from your normal base on business, typically an overnight stay or a full day away. Lunch near the office is living, not trading.</p>
+  <p><b>Accountancy, software, stationery, printing, postage.</b> Including NB's monthly fee and this platform's hosting when it has any.</p>
+  <h3>Not deductible, however tempting</h3>
+  <p><b>Client and introducer entertaining.</b> Coffees, lunches, drinks, gifts to clients. Record them so your accountant has the full picture, but they never reduce your tax bill. The one exception is a business gift under £50 carrying a conspicuous advert for your business, which for an adviser almost never applies.</p>
+  <p><b>Clothing.</b> Suits are not deductible even if you only wear them for work.</p>
+  <p><b>Fines, personal insurance, pension contributions.</b> Pension contributions get relief through your tax return, not as a business expense; they still belong in your planning, just not here.</p>
+  <h3>Record-keeping rules that now bite</h3>
+  <p>Under MTD each transaction needs a date, amount and category, held digitally at the time. Keep receipts as photos alongside; a folder per quarter in your phone is enough. Bank statements every six months no longer satisfy the requirement, which is why this file exists.</p>
+</section>
+
+<!-- SETTINGS -->
+<section class="screen" id="s-set">
+  <h2>Settings &amp; backup</h2>
+  <p class="sub">Records sync to your account on every change and open on any device you sign in on. Still download a backup at each quarter end and keep it in your accounts folder; a file you hold is the record HMRC can never be told you lost.</p>
+  <div class="sec">Your business</div>
+  <div class="form" style="grid-template-columns:repeat(4,1fr)">
+    <div><label>Tax year in view</label><select id="sTY" onchange="save();render()"><option value="2025">2025/26</option><option value="2026" selected>2026/27</option><option value="2027">2027/28</option></select></div>
+    <div><label>Home working flat rate</label><select id="sHome" onchange="save();render()"><option value="0">Not claiming</option><option value="10">£10/month (25–50 hrs)</option><option value="18">£18/month (51–100 hrs)</option><option value="26">£26/month (101+ hrs)</option></select></div>
+    <div><label>MTD start</label><select id="sMtd" onchange="save();render()"><option value="unknown">Not yet confirmed</option><option value="2026">In from April 2026</option><option value="2027">In from April 2027</option><option value="2028">In from April 2028</option><option value="no">Below threshold</option></select></div>
+    <div><label>Accountant</label><input id="sAcc" value="NB Accounting" onchange="save()"></div>
+  </div>
+  <div class="sec">Backup</div>
+  <div class="row">
+    <button class="btn" onclick="backup()">Download backup (JSON)</button>
+    <label class="btn ghost" style="margin:0;text-transform:none;letter-spacing:0;font-size:13px">Restore from backup <input type="file" accept=".json" style="display:none" onchange="restore(this)"></label>
+    <button class="btn ghost" onclick="if(confirm('Delete every record in this browser? Export a backup first.')){localStorage.removeItem(KEY);location.reload()}">Clear all data</button>
+  </div>
+  <div class="note"><b>Privacy.</b> Records are held in your own Supabase project, under your own account, readable only by you (row-level security enforces this). Nobody else, including whoever hosts the page, can read them. The browser keeps a working copy so the app opens offline.</div>
+</section>
+
+</main>
+<footer>ES Practice Books v1.0 · Records tool, not tax advice. Rates: mileage 45p/25p (10,000-mile threshold), home-working flat rates, 2026/27 income tax and Class 4 NI thresholds. Confirm final figures with your accountant.</footer>
+
+<script>
+const KEY='es_practice_books_v1';
+// Expense categories → HMRC self-employment (SA103 / MTD update) boxes
+const CATS=[
+ {id:'prof',label:'Professional fees & subscriptions (CII/PFS, exams, CPD)',hmrc:'professionalFees',ded:true},
+ {id:'travel',label:'Travel: train, parking, tolls, taxi',hmrc:'travelCosts',ded:true},
+ {id:'subs',label:'Subsistence (away from base)',hmrc:'travelCosts',ded:true},
+ {id:'phone',label:'Phone & internet (business share)',hmrc:'adminCosts',ded:true},
+ {id:'soft',label:'Software & subscriptions',hmrc:'adminCosts',ded:true},
+ {id:'office',label:'Stationery, printing, postage',hmrc:'adminCosts',ded:true},
+ {id:'acct',label:'Accountancy fees',hmrc:'professionalFees',ded:true},
+ {id:'recharge',label:'Practice recharges (licences, PI, marketing)',hmrc:'otherExpenses',ded:true},
+ {id:'adv',label:'Advertising & marketing',hmrc:'advertisingCosts',ded:true},
+ {id:'ins',label:'Business insurance',hmrc:'financialCharges',ded:true},
+ {id:'bank',label:'Bank charges (business account)',hmrc:'financialCharges',ded:true},
+ {id:'ent',label:'Client / introducer entertaining & gifts',hmrc:'businessEntertainmentCosts',ded:false},
+ {id:'other',label:'Other (ask accountant)',hmrc:'otherExpenses',ded:true},
+];
+const HMRC={turnover:'Turnover',travelCosts:'Car, van and travel',adminCosts:'Phone, stationery and other office costs',professionalFees:'Accountancy, legal and professional',advertisingCosts:'Advertising and business entertainment',businessEntertainmentCosts:'Business entertainment (disallowed)',financialCharges:'Bank, insurance and financial charges',otherExpenses:'Other business expenses',home:'Home working (simplified)'};
+let D=load();
+function load(){try{return Object.assign({income:[],exp:[],trips:[],ty:'2026',home:'0',mtd:'unknown',acc:'NB Accounting',chk:{}},JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){return {income:[],exp:[],trips:[],ty:'2026',home:'0',mtd:'unknown',acc:'NB Accounting',chk:{}}}}
+function save(){D.ty=q('sTY').value;D.home=q('sHome').value;D.mtd=q('sMtd').value;D.acc=q('sAcc').value;D.updated=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(D));pushSoon()}
+const q=id=>document.getElementById(id);
+const gbp=n=>'£'+Math.round(n).toLocaleString('en-GB');
+const gbp2=n=>'£'+n.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtD=s=>{const d=new Date(s);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'})};
+const uid=()=>Math.random().toString(36).slice(2,9);
+function tyStart(){return new Date(+D.ty,3,6)}
+function quarters(){const y=+D.ty;return [
+ {n:1,s:new Date(y,3,6),e:new Date(y,6,5),due:new Date(y,7,7)},
+ {n:2,s:new Date(y,6,6),e:new Date(y,9,5),due:new Date(y,10,7)},
+ {n:3,s:new Date(y,9,6),e:new Date(y+1,0,5),due:new Date(y+1,1,7)},
+ {n:4,s:new Date(y+1,0,6),e:new Date(y+1,3,5),due:new Date(y+1,4,7)}]}
+const inTY=r=>{const d=new Date(r.date),s=tyStart(),e=new Date(+D.ty+1,3,5,23,59);return d>=s&&d<=e};
+const inQ=(r,Q)=>{const d=new Date(r.date);return d>=Q.s&&d<=new Date(Q.e.getFullYear(),Q.e.getMonth(),Q.e.getDate(),23,59)};
+const cat=id=>CATS.find(c=>c.id===id)||CATS[CATS.length-1];
+// mileage allowance with 10k threshold, computed in date order across the year
+function mileageCalc(trips){const t=[...trips].filter(inTY).sort((a,b)=>a.date.localeCompare(b.date));let cum=0;return t.map(x=>{const m=+x.miles;const a=Math.max(0,Math.min(m,10000-cum));const b=m-a;cum+=m;return {...x,allow:a*.45+b*.25}})}
+function homeAllowance(upTo){const months=upTo?Math.max(0,Math.min(12,Math.floor((upTo-tyStart())/(1000*60*60*24*30.44))+1)):12;return months*(+D.home)}
+function homeInQ(){return 3*(+D.home)}
+function taxEst(profit){const PA=12570,BR=50270,HR=125140;let pa=PA;if(profit>100000)pa=Math.max(0,PA-(profit-100000)/2);const taxable=Math.max(0,profit-pa);let t=0;t+=Math.min(taxable,BR-PA>0?Math.max(0,Math.min(taxable,BR-pa)):0)*.2;const hrPart=Math.max(0,Math.min(taxable-(BR-pa),HR-BR));t+=hrPart*.4;t+=Math.max(0,taxable-(BR-pa)-(HR-BR))*.45;let ni=Math.max(0,Math.min(profit,BR)-PA)*.06+Math.max(0,profit-BR)*.02;return {tax:t,ni:ni}}
+
+function render(){
+ q('hdTY').textContent=D.ty+'/'+(+D.ty+1-2000);
+ q('sTY').value=D.ty;q('sHome').value=D.home;q('sMtd').value=D.mtd;q('sAcc').value=D.acc;
+ // cat selects
+ if(!q('eCat').options.length){CATS.forEach(c=>{q('eCat').add(new Option(c.label+(c.ded?'':' — not deductible'),c.id));q('eFilter').add(new Option(c.label,c.id))})}
+ if(!q('qSel').options.length){quarters().forEach(Q=>q('qSel').add(new Option('Q'+Q.n+'  '+fmtD(Q.s)+' – '+fmtD(Q.e),Q.n)))}
+ // defaults
+ const today=new Date().toISOString().slice(0,10);['iDate','eDate','mDate'].forEach(i=>{if(!q(i).value)q(i).value=today});
+ const inc=D.income.filter(inTY),exp=D.exp.filter(inTY),trips=mileageCalc(D.trips);
+ const incT=inc.reduce((s,r)=>s+ +r.amt,0);
+ const expDed=exp.filter(r=>cat(r.cat).ded).reduce((s,r)=>s+ +r.amt,0);
+ const mil=trips.reduce((s,r)=>s+r.allow,0),miles=trips.reduce((s,r)=>s+ +r.miles,0);
+ const home=homeAllowance(new Date()<new Date(+D.ty+1,3,5)?new Date():null);
+ const expT=expDed+mil+home,profit=Math.max(0,incT-expT),te=taxEst(profit);
+ q('dIncome').textContent=gbp(incT);q('dExp').textContent=gbp(expT);q('dExpN').textContent='mileage '+gbp(mil)+' · home '+gbp(home)+' · other '+gbp(expDed);
+ q('dProfit').textContent=gbp(profit);q('dTax').textContent=gbp(te.tax+te.ni);q('dTaxN').textContent='tax '+gbp(te.tax)+' + Class 4 NI '+gbp(te.ni)+' · ~'+(profit?Math.round((te.tax+te.ni)/profit*100):0)+'% of profit';
+ // quarter strip
+ const now=new Date();
+ q('qStrip').innerHTML=quarters().map(Q=>{const qi=inc.filter(r=>inQ(r,Q)).reduce((s,r)=>s+ +r.amt,0);const qe=exp.filter(r=>inQ(r,Q)&&cat(r.cat).ded).reduce((s,r)=>s+ +r.amt,0)+trips.filter(r=>inQ(r,Q)).reduce((s,r)=>s+r.allow,0);const cur=now>=Q.s&&now<=Q.e;const st=qStatus(Q,now);return `<div class="q ${cur?'cur':''}"><div class="qn">Quarter ${Q.n}</div><div class="qp">${fmtD(Q.s)} – ${fmtD(Q.e)}</div><div class="qv">${gbp(qi)}<span style="font-size:13px;color:var(--ink-3)"> in · ${gbp(qe)} out</span></div><div class="qd"><i class="dot ${st.c}"></i>${st.t}</div></div>`}).join('');
+ q('mtdNote').innerHTML=mtdText();
+ // checklist
+ const items=['Confirm with '+D.acc+' whether I am in scope for MTD for Income Tax, and from which April (my 2024/25 and 2025/26 gross fee income decide this).','Confirm '+D.acc+' has signed me up to MTD and is authorised as my agent for quarterly updates.','Ask which MTD software they use and whether my quarterly CSV export is what they need.','If a quarterly update is already overdue, agree a plan to bring it current (no penalty points for the first four late updates in 2026/27).','Agree the home-working method: flat rate or actual-cost apportionment.','Ask whether my phone/internet business percentage is reasonable and consistent.','Confirm payments on account dates (31 Jan / 31 Jul) and put the amounts in my diary.','Ask what they were doing with the half-yearly statements and whether any 2025/26 expenses (mileage especially) were missed and can still be corrected.'];
+ q('chkList').innerHTML=items.map((t,i)=>`<label class="chk"><input type="checkbox" ${D.chk[i]?'checked':''} onchange="D.chk[${i}]=this.checked;save()"><span>${t}</span></label>`).join('');
+ // income table
+ q('incBody').innerHTML=inc.length?inc.sort((a,b)=>b.date.localeCompare(a.date)).map(r=>`<tr><td class="mono">${fmtD(r.date)}</td><td>${r.src}</td><td>${r.desc||''}</td><td class="amt r">${gbp2(+r.amt)}</td><td><button class="x" title="Delete" onclick="del('income','${r.id}')">×</button></td></tr>`).join('')+`<tr><td colspan="3"><b>Total for ${D.ty}/${+D.ty+1-2000}</b></td><td class="amt r"><b>${gbp2(incT)}</b></td><td></td></tr>`:'<tr><td colspan="5" class="empty">No income recorded for this tax year. Add each fee statement as it arrives.</td></tr>';
+ // expense table
+ const f=q('eFilter').value;const el=exp.filter(r=>!f||r.cat===f).sort((a,b)=>b.date.localeCompare(a.date));
+ q('expBody').innerHTML=el.length?el.map(r=>{const c=cat(r.cat);return `<tr><td class="mono">${fmtD(r.date)}</td><td>${c.label.split(' (')[0]}${c.ded?'':' <span class="tag no">not deductible</span>'}</td><td>${r.payee||''}</td><td>${r.desc||''}</td><td class="amt r">${gbp2(+r.amt)}</td><td><button class="x" onclick="del('exp','${r.id}')">×</button></td></tr>`}).join('')+`<tr><td colspan="4"><b>Deductible total</b> <span class="tag">home working ${gbp(home)} added automatically</span></td><td class="amt r"><b>${gbp2(expDed+home)}</b></td><td></td></tr>`:'<tr><td colspan="6" class="empty">No expenses yet. Start with your CII/PFS membership and NB\'s monthly fee.</td></tr>';
+ // mileage
+ q('mMiles').textContent=Math.round(miles).toLocaleString();q('mAllow').textContent=gbp(mil);q('mCount').textContent=trips.length;q('mBar').style.width=Math.min(100,miles/100)+'%';q('mBarN').textContent=miles>=10000?'over 10,000 — remainder at 25p':Math.round(10000-miles).toLocaleString()+' miles left at 45p';
+ q('milBody').innerHTML=trips.length?[...trips].reverse().map(r=>`<tr><td class="mono">${fmtD(r.date)}</td><td>${r.from}</td><td>${r.to}</td><td>${r.why||''}</td><td class="amt r">${(+r.miles).toLocaleString()}</td><td class="amt r">${gbp2(r.allow)}</td><td><button class="x" onclick="del('trips','${r.id}')">×</button></td></tr>`).join(''):'<tr><td colspan="7" class="empty">No journeys logged. Every client visit outside Royston belongs here.</td></tr>';
+ // quarterly
+ const Q=quarters()[+q('qSel').value-1]||quarters()[0];q('qN').textContent=Q.n;
+ const qi=inc.filter(r=>inQ(r,Q)),qe=exp.filter(r=>inQ(r,Q)),qt=trips.filter(r=>inQ(r,Q));
+ const qiT=qi.reduce((s,r)=>s+ +r.amt,0),qmil=qt.reduce((s,r)=>s+r.allow,0),qh=homeInQ();
+ const rows={};qe.forEach(r=>{const c=cat(r.cat);const k=c.hmrc;rows[k]=rows[k]||{amt:0,cats:new Set(),ded:c.ded};rows[k].amt+= +r.amt;rows[k].cats.add(c.label.split(' (')[0])});
+ if(qmil){rows.travelCosts=rows.travelCosts||{amt:0,cats:new Set(),ded:true};rows.travelCosts.amt+=qmil;rows.travelCosts.cats.add('Mileage '+Math.round(qt.reduce((s,r)=>s+ +r.miles,0))+' mi')}
+ if(qh){rows.home={amt:qh,cats:new Set(['Flat rate £'+D.home+' × 3 months']),ded:true}}
+ const qeT=Object.entries(rows).filter(([k,v])=>v.ded).reduce((s,[k,v])=>s+v.amt,0);
+ q('qInc').textContent=gbp(qiT);q('qExp').textContent=gbp(qeT);const st=qStatus(Q,now);q('qStat').innerHTML=`<i class="dot ${st.c}"></i> ${st.t}`;q('qDue').textContent='update due '+Q.due.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+ q('qBody').innerHTML=`<tr><td><b>${HMRC.turnover}</b></td><td>${qi.length} receipt${qi.length===1?'':'s'}</td><td class="amt r"><b>${gbp2(qiT)}</b></td></tr>`+Object.entries(rows).map(([k,v])=>`<tr><td>${HMRC[k]}${v.ded?'':' <span class="tag no">disallowed</span>'}</td><td>${[...v.cats].join(', ')}</td><td class="amt r">${gbp2(v.amt)}</td></tr>`).join('')+(Object.keys(rows).length?'':'<tr><td colspan="3" class="empty">No expenses in this quarter.</td></tr>');
+}
+function qStatus(Q,now){if(D.mtd==='no'||(D.mtd!=='unknown'&&+D.mtd>+D.ty))return {c:'na',t:'not required this year'};if(now<Q.s)return {c:'na',t:'not started'};if(now<=Q.e)return {c:'ok',t:'open · due '+fmtD(Q.due)};const days=Math.round((Q.due-now)/864e5);if(days>=0)return {c:'warn',t:'closed · due in '+days+' day'+(days===1?'':'s')};return {c:'bad',t:'overdue by '+(-days)+' days'}}
+function mtdText(){const y=+D.ty;switch(D.mtd){case 'no':return '<b>Below the MTD threshold.</b> Quarterly updates are not required, but keeping records this way still makes your year-end return trivial and means you are ready if income crosses £30,000 gross.';case 'unknown':return '<b>MTD status not yet confirmed.</b> Whether you are in from April 2026 depends on your gross fee income in 2024/25 being over £50,000; from April 2027 if 2025/26 was over £30,000. Ask '+D.acc+' this week and set the answer in Settings so the quarter tracker knows what to chase.';default:return +D.mtd<=y?'<b>In MTD from April '+D.mtd+'.</b> Each quarter above must be submitted by '+D.acc+' by the due date, and they can only do that from records you keep as you go. The first four late updates in your first year carry no penalty points, but the year-end return still does.':'<b>MTD starts April '+D.mtd+'.</b> Nothing to submit quarterly this year. Use the time to make this habit automatic, so the first live quarter is routine.'}}
+function addIncome(){const a=+q('iAmt').value;if(!q('iDate').value||!(a>0))return alert('Date and amount are needed.');D.income.push({id:uid(),date:q('iDate').value,src:q('iSrc').value,desc:q('iDesc').value.trim(),amt:a});q('iAmt').value='';q('iDesc').value='';save();render()}
+function addExpense(){const a=+q('eAmt').value;if(!q('eDate').value||!(a>0))return alert('Date and amount are needed.');D.exp.push({id:uid(),date:q('eDate').value,cat:q('eCat').value,payee:q('ePayee').value.trim(),desc:q('eDesc').value.trim(),amt:a});q('eAmt').value='';q('eDesc').value='';q('ePayee').value='';save();render()}
+function addTrip(){const m=+q('mMi').value;if(!q('mDate').value||!(m>0))return alert('Date and miles are needed.');D.trips.push({id:uid(),date:q('mDate').value,from:q('mFrom').value.trim()||'Royston',to:q('mTo').value.trim(),why:q('mWhy').value.trim(),miles:m});q('mMi').value='';q('mTo').value='';q('mWhy').value='';save();render()}
+function del(k,id){D[k]=D[k].filter(r=>r.id!==id);save();render()}
+function csvEsc(s){s=String(s==null?'':s);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
+function buildCSV(filter,label){const L=[['Type','Date','HMRC category','Category','Payee / source','Description','Amount','Deductible']];D.income.filter(inTY).filter(filter).forEach(r=>L.push(['Income',r.date,'Turnover',r.src,'',r.desc,(+r.amt).toFixed(2),'']));D.exp.filter(inTY).filter(filter).forEach(r=>{const c=cat(r.cat);L.push(['Expense',r.date,HMRC[c.hmrc],c.label.split(' (')[0],r.payee,r.desc,(+r.amt).toFixed(2),c.ded?'Yes':'No'])});mileageCalc(D.trips).filter(filter).forEach(r=>L.push(['Mileage',r.date,HMRC.travelCosts,'Mileage '+r.miles+' mi',r.from+' → '+r.to,r.why,r.allow.toFixed(2),'Yes']));if(+D.home)L.push(['Home working','',HMRC.home,'Flat rate £'+D.home+'/month','','',label==='year'?(12*+D.home).toFixed(2):(3*+D.home).toFixed(2),'Yes']);return L.map(r=>r.map(csvEsc).join(',')).join('\n')}
+function dl(name,text,type){const b=new Blob([text],{type});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function exportQuarterCSV(){const Q=quarters()[+q('qSel').value-1];dl(`ES_Q${Q.n}_${D.ty}-${+D.ty+1-2000}_MTD.csv`,buildCSV(r=>inQ(r,Q),'q'),'text/csv')}
+function exportYearCSV(){dl(`ES_${D.ty}-${+D.ty+1-2000}_full_year.csv`,buildCSV(()=>true,'year'),'text/csv')}
+function backup(){dl(`ES_Practice_Books_backup_${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(D,null,1),'application/json')}
+function restore(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);if(!j.income||!j.exp)throw 0;D=Object.assign(load(),j);localStorage.setItem(KEY,JSON.stringify(D));render();alert('Restored '+(D.income.length+D.exp.length+D.trips.length)+' records.')}catch(e){alert('That file is not an ES Practice Books backup.')}};r.readAsText(f)}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));q('s-'+b.dataset.s).classList.add('on');render()});
+
+// ── Cloud sync (Supabase) ─────────────────────────────────────────────
+const CONFIGURED=!SUPABASE_URL.startsWith('PASTE');
+let sb=null,user=null,pushTimer=null;
+function syncUI(state,text){const s=q('sync');s.className='sync '+state;q('syncT').innerHTML=text}
+async function initCloud(){
+ if(!CONFIGURED){syncUI('','local only · not configured');return}
+ sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{flowType:'implicit',detectSessionInUrl:true,persistSession:true}});
+ const hp=new URLSearchParams(location.hash.slice(1));const urlErr=hp.get('error_description')||new URLSearchParams(location.search).get('error_description');
+ sb.auth.onAuthStateChange((e,s)=>{if(s&&!user){user=s.user;q('gate').style.display='none';history.replaceState(null,'',location.pathname);afterLogin()}});
+ const {data:{session}}=await sb.auth.getSession();
+ if(session){user=session.user;afterLogin();return}
+ q('gate').style.display='flex';syncUI('off','signed out');
+ if(urlErr)q('gMsg').textContent='Sign-in link problem: '+urlErr.replace(/\+/g,' ')+'. Request a new one below.';
+}
+async function afterLogin(){
+ syncUI('busy','syncing…');
+ const {data,error}=await sb.from('books').select('data,updated_at').eq('user_id',user.id).maybeSingle();
+ if(error){syncUI('off','sync error · '+error.message);return}
+ if(data&&data.data){const remote=data.data;const localNewer=D.updated&&remote.updated&&D.updated>remote.updated;if(!localNewer){D=Object.assign(load(),remote);localStorage.setItem(KEY,JSON.stringify(D));render()}else await push()}
+ else await push();
+ syncUI('ok','synced · <button onclick="signOut()">sign out</button>');
+}
+function pushSoon(){if(!sb||!user)return;clearTimeout(pushTimer);syncUI('busy','saving…');pushTimer=setTimeout(push,800)}
+async function push(){if(!sb||!user)return;const {error}=await sb.from('books').upsert({user_id:user.id,data:D,updated_at:new Date().toISOString()},{onConflict:'user_id'});syncUI(error?'off':'ok',error?'not saved · '+error.message:'synced · <button onclick="signOut()">sign out</button>')}
+async function sendLink(){const email=q('gEmail').value.trim();if(!email)return;q('gMsg').textContent='Sending…';const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname}});q('gMsg').textContent=error?error.message:'Sent. Open the link from your inbox; it works from any browser or device.'}
+async function signOut(){await sb.auth.signOut();location.reload()}
+window.addEventListener('online',()=>{if(user)push()});
+render();initCloud();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
