@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ES Practice Books</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#101a33">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = "https://noupjqvinpanogkybnxd.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_qrsHTOkBJWQMzMbegAojAg_geD3jDZF";
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#101a33;--navy-2:#182548;--cream:#f7f3ea;--cream-2:#efe9db;--paper:#fffdf8;--au:#c8952a;--au-2:#d9a747;--au-3:#efd183;--ink:#141a2b;--ink-2:#4a5166;--ink-3:#8a90a3;--rule:#d9d2c1;--ok:#2f7a5b;--warn:#b7791f;--bad:#b3403f}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--cream);color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.num{font-family:"Playfair Display",serif;font-variant-numeric:lining-nums tabular-nums}
+.mono{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.02em}
+header{background:var(--navy);color:var(--cream);padding:28px 40px 22px;position:relative;overflow:hidden}
+header:after{content:"";position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;border:1px solid rgba(217,167,71,.25);pointer-events:none}
+header:before{content:"";position:absolute;right:20px;top:20px;width:120px;height:120px;border-radius:50%;border:1px solid rgba(217,167,71,.35);pointer-events:none}
+.eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--au-2)}
+header h1{font-family:"Playfair Display",serif;font-weight:600;font-size:30px;margin-top:6px;letter-spacing:-.01em}
+header h1 em{font-style:italic;font-weight:400;color:var(--au-3)}
+header p{color:#b9c0d4;max-width:640px;margin-top:6px;font-size:13px}
+.hdr-right{position:absolute;right:40px;top:30px;text-align:right;z-index:2}
+.hdr-right .ty{font-family:"Playfair Display",serif;font-size:22px;color:var(--au-3);font-variant-numeric:lining-nums;background:transparent;border:0;border-bottom:1px solid rgba(217,167,71,.5);padding:0 22px 2px 0;width:auto;cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23efd183' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 4px center;text-align:left}
+.hdr-right .ty option{color:var(--ink);background:#fff;font-size:14px}
+.hdr-right .lbl{font-size:11px;color:#b9c0d4}
+.sync{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:#b9c0d4;margin-top:8px;display:flex;gap:6px;align-items:center;justify-content:flex-end}
+.sync i{width:7px;height:7px;border-radius:50%;background:var(--rule);display:inline-block}
+.sync.ok i{background:#34d399}.sync.busy i{background:var(--au-2)}.sync.off i{background:#fb7185}
+.sync button{background:none;border:0;color:var(--au-3);cursor:pointer;font:inherit;text-decoration:underline;padding:0}
+nav{display:flex;gap:2px;background:var(--navy-2);padding:0 40px;border-bottom:1px solid rgba(217,167,71,.3)}
+nav button{background:none;border:0;color:#b9c0d4;padding:13px 16px;font:500 13px Inter,sans-serif;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+nav button:hover{color:var(--cream)}
+nav button.on{color:var(--au-3);border-bottom-color:var(--au-2)}
+nav button:focus-visible{outline:2px solid var(--au-2);outline-offset:-2px}
+nav button svg{display:none;width:22px;height:22px;fill:currentColor}
+main{padding:28px 40px 60px;max-width:1240px}
+.screen{display:none}.screen.on{display:block}
+h2{font-family:"Playfair Display",serif;font-weight:600;font-size:22px;letter-spacing:-.01em;margin-bottom:4px}
+h3{font-family:"Playfair Display",serif;font-weight:600;font-size:16px;margin:0 0 6px}
+.sub{color:var(--ink-2);margin-bottom:18px;max-width:720px}
+.sec{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--au);display:flex;align-items:center;gap:14px;margin:26px 0 12px}
+.sec:after{content:"";flex:1;height:1px;background:var(--rule)}
+.grid{display:grid;gap:14px}
+.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:16px 18px;box-shadow:0 1px 2px rgba(16,26,51,.05)}
+.card.hl{background:linear-gradient(180deg,#fff9e8,var(--paper));border-color:var(--au-2)}
+.card.click{cursor:pointer}.card.click:hover{border-color:var(--au)}
+.card .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3)}
+.card .v{font-family:"Playfair Display",serif;font-size:26px;font-variant-numeric:lining-nums tabular-nums;margin-top:2px}
+.card .n{font-size:12px;color:var(--ink-2);margin-top:4px}
+.qs{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--paper)}
+.q{padding:16px 18px;border-right:1px solid var(--rule);position:relative}
+.q:last-child{border-right:0}
+.q .qn{font-family:"Playfair Display",serif;font-size:13px;font-style:italic;color:var(--ink-3)}
+.q .qp{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink-2);margin-top:2px}
+.q .qv{font-family:"Playfair Display",serif;font-size:22px;font-variant-numeric:lining-nums tabular-nums;margin-top:8px}
+.q .qd{font-size:12px;margin-top:6px;display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
+.dot.ok{background:var(--ok)}.dot.warn{background:var(--warn)}.dot.bad{background:var(--bad)}.dot.na{background:var(--rule)}
+.q.cur{background:linear-gradient(180deg,#fff9e8,var(--paper))}
+.q.cur:before{content:"";position:absolute;left:0;top:0;right:0;height:2px;background:var(--au-2)}
+table{width:100%;border-collapse:collapse;background:var(--paper);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);background:var(--cream-2);font-weight:600}
+td{padding:9px 12px;border-bottom:1px solid #ece6d8;vertical-align:middle}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right}
+td.amt{font-family:"Playfair Display",serif;font-variant-numeric:lining-nums tabular-nums;font-size:15px}
+tbody tr:hover{background:#fbf8f0}
+tr.tot td{background:var(--cream-2);font-weight:600}
+tr.due-past td{color:var(--ink-3)}
+tr.due-next td{background:#fff9e8}
+.form{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end;background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:14px 16px;margin-bottom:14px}
+.form.f5{grid-template-columns:repeat(5,1fr)}
+.form.editing{border-color:var(--au);box-shadow:0 0 0 3px rgba(200,149,42,.15)}
+label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin-bottom:4px}
+input,select,textarea{width:100%;font:14px Inter,sans-serif;padding:8px 10px;border:1px solid var(--rule);border-radius:4px;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--au-2);outline-offset:-1px;border-color:var(--au)}
+input[type=range]{padding:0;border:0;background:transparent;accent-color:var(--au)}
+.btn{font:600 13px Inter,sans-serif;padding:9px 16px;border-radius:4px;border:1px solid var(--navy);background:var(--navy);color:var(--cream);cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--navy-2)}
+.btn.gold{background:var(--au);border-color:var(--au);color:var(--navy)}.btn.gold:hover{background:var(--au-2)}
+.btn.ghost{background:transparent;color:var(--navy)}.btn.ghost:hover{background:var(--cream-2)}
+.btn.sm{padding:5px 10px;font-size:12px}
+.btn.rcpt{padding:8px 10px;white-space:normal}.btn.rcpt.has{border-color:var(--ok);color:var(--ok)}
+.rl{color:var(--au);text-decoration:none;font-size:14px;cursor:pointer}
+.btn:focus-visible{outline:2px solid var(--au-2);outline-offset:2px}
+.ic{background:none;border:0;color:var(--ink-3);cursor:pointer;font-size:15px;line-height:1;padding:4px 6px;border-radius:4px}
+.ic:hover{color:var(--navy);background:var(--cream-2)}.ic.x:hover{color:var(--bad)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tag{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:10.5px;padding:2px 7px;border-radius:3px;background:var(--cream-2);color:var(--ink-2)}
+.tag.no{background:#f6e4e4;color:var(--bad)}.tag.au{background:#fff3d6;color:#8a5f10}
+.note{background:#fff9e8;border-left:3px solid var(--au-2);padding:12px 14px;border-radius:0 4px 4px 0;font-size:13px;color:var(--ink-2);margin:12px 0}
+.note b{color:var(--ink)}
+.empty{padding:26px;text-align:center;color:var(--ink-3);font-size:13px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;grid-column:1/-1}
+.chip{font:500 12px Inter,sans-serif;padding:6px 11px;border-radius:20px;border:1px solid var(--rule);background:#fff;color:var(--ink-2);cursor:pointer}
+.chip:hover{border-color:var(--au);color:var(--ink)}
+.chip b{color:var(--ink)}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #ece6d8;max-width:760px}
+.chk input{width:16px;height:16px;margin-top:3px;flex:none}
+.chk span{color:var(--ink-2)}
+.chk input:checked+span{color:var(--ink-3);text-decoration:line-through}
+.bar{height:6px;background:var(--cream-2);border-radius:3px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--au-2)}
+.guide p{max-width:720px;margin-bottom:10px;color:var(--ink-2)}
+.guide h3{margin:18px 0 6px}
+details{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:0 18px;margin-top:14px}
+details summary{cursor:pointer;padding:14px 0;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details summary:after{content:"+";font-family:"Playfair Display",serif;font-size:20px;color:var(--au)}
+details[open] summary:after{content:"–"}
+details .guide{padding-bottom:16px}
+.chart{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:14px 16px 8px}
+.chart svg{width:100%;height:150px;display:block}
+.legend{display:flex;gap:16px;font-size:11px;color:var(--ink-3);margin-top:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.split{display:grid;grid-template-columns:1.2fr 1fr;gap:14px}
+.kv{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #ece6d8;font-size:13px}
+.kv:last-child{border-bottom:0}
+.kv b{font-family:"Playfair Display",serif;font-size:15px;font-variant-numeric:lining-nums tabular-nums;font-weight:600}
+.kv.big{padding:10px 0}.kv.big b{font-size:20px}
+.kv .dim{color:var(--ink-3)}
+.pill{display:inline-flex;gap:4px;background:var(--cream-2);border-radius:20px;padding:3px}
+.pill button{border:0;background:transparent;padding:5px 12px;border-radius:16px;font:500 12px Inter,sans-serif;color:var(--ink-2);cursor:pointer}
+.pill button.on{background:var(--navy);color:var(--cream)}
+.slider{display:flex;align-items:center;gap:12px;margin:8px 0 4px}
+.slider input{flex:1}
+.slider output{font-family:"Playfair Display",serif;font-size:18px;min-width:90px;text-align:right;font-variant-numeric:lining-nums tabular-nums}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:var(--cream);padding:12px 16px;border-radius:8px;font-size:13px;max-width:min(92vw,520px);box-shadow:0 8px 30px rgba(16,26,51,.35);opacity:0;pointer-events:none;transition:all .25s;z-index:60;display:flex;gap:14px;align-items:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+#toast b{color:var(--au-3)}
+#toast button{background:var(--au);color:var(--navy);border:0;border-radius:5px;padding:6px 10px;font:600 12px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.ins{background:var(--paper);border:1px solid var(--rule);border-left:3px solid var(--au-2);border-radius:0 6px 6px 0;padding:11px 14px;margin-bottom:8px;font-size:13px;color:var(--ink-2)}.ins b{color:var(--ink)}.ins.good{border-left-color:var(--ok)}.ins.bad{border-left-color:var(--bad)}.ins a{color:var(--au);cursor:pointer;text-decoration:underline}
+.imp-dup td{opacity:.45}
+.pack h2{margin-top:22px}.pack table{margin-bottom:14px}.pack .meta{font-size:12px;color:var(--ink-3)}
+.yrnote{font-size:12px;color:var(--ink-3);margin:-8px 0 14px}
+#gate{position:fixed;inset:0;background:var(--navy);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+#gate .box{background:var(--paper);border-radius:8px;padding:30px 28px;max-width:400px;width:100%}
+#gate h2{font-size:24px}#gate p{color:var(--ink-2);margin:6px 0 16px;font-size:13px}
+#gate .btn{width:100%;margin-top:10px}#gate .msg{font-size:12px;margin-top:10px;color:var(--ink-2)}
+footer{padding:16px 40px;color:var(--ink-3);font-size:11.5px;border-top:1px solid var(--rule)}
+@media(max-width:900px){.g4,.g3,.g2{grid-template-columns:1fr 1fr}main,header,nav{padding-left:18px;padding-right:18px}.hdr-right{display:none}.form,.form.f5{grid-template-columns:1fr 1fr}.split{grid-template-columns:1fr}}
+@media(max-width:700px){
+  html{-webkit-text-size-adjust:100%}html,body{overflow-x:hidden;max-width:100vw}main,header{max-width:100vw;overflow:hidden}
+  body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+  header{padding:calc(14px + env(safe-area-inset-top)) 18px 14px}header:before,header:after{display:none}
+  header h1{font-size:22px;margin-top:2px}header p{display:none}
+  .hdr-right{position:static;text-align:left;margin-top:8px;display:flex;justify-content:space-between;align-items:baseline}
+  .hdr-right .ty{font-size:16px;padding-right:20px}.hdr-right .lbl{display:none}.sync{margin-top:0}
+  nav{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(7,1fr);padding:6px 4px calc(6px + env(safe-area-inset-bottom));background:rgba(16,26,51,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(217,167,71,.35);border-bottom:0}
+  nav button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;font-size:9.5px;letter-spacing:.01em;border:0;margin:0;color:#8b93aa}
+  nav button svg{display:block}nav button.on{color:var(--au-3)}
+  main{padding:16px 16px 24px}h2{font-size:20px}.sub{font-size:13px;margin-bottom:12px}
+  .grid.g4,.grid.g3,.grid.g2{grid-template-columns:1fr 1fr;gap:10px}
+  .card[style*="span 2"]{grid-column:span 2!important}
+  .card{padding:12px 13px}.card .v{font-size:21px}.card .n{font-size:11px}
+  .qs{grid-template-columns:1fr 1fr}.q{padding:12px 13px;border-bottom:1px solid var(--rule)}.q:nth-child(even){border-right:0}.q .qv{font-size:18px}.q .qv span{display:block;margin-top:2px}
+  .form,.form.f5{grid-template-columns:1fr;gap:10px;padding:14px}
+  input,select,textarea{font-size:16px;padding:12px 12px;border-radius:8px}
+  .btn{padding:13px 16px;font-size:15px;width:100%;border-radius:8px}.btn.sm{width:auto;padding:7px 12px;font-size:13px}
+  .row .btn,.row label.btn{width:100%}.row select{width:100%!important}
+  .sec{margin:20px 0 10px}
+  #s-inc,#s-exp,#s-mil{display:none;flex-direction:column}#s-inc.on,#s-exp.on,#s-mil.on{display:flex}
+  #s-inc h2,#s-exp h2,#s-mil h2{order:-3}#s-inc .form,#s-exp .form,#s-mil .form{order:-2}
+  #s-inc .sub,#s-exp .sub,#s-mil .sub{order:10;margin-top:14px;font-size:12.5px;color:var(--ink-3)}
+  #s-mil .grid{grid-template-columns:1fr 1fr 1fr;gap:8px}#s-mil .card{padding:10px}#s-mil .card .v{font-size:18px}#s-mil .card .n{font-size:10px}#s-mil .bar{display:none}
+  table,tbody,tr,td{display:block;width:100%}thead{display:none}table{border:0;background:transparent}
+  tr{background:var(--paper);border:1px solid var(--rule);border-radius:8px;margin-bottom:10px;padding:10px 12px;position:relative}
+  td{border:0;padding:3px 0;text-align:left!important}
+  td:before{content:attr(data-l);display:block;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3)}
+  td:not([data-l]):before{display:none}td.amt{font-size:20px;padding-top:6px}
+  td.act{position:absolute;right:6px;top:6px;width:auto;padding:0;display:flex;gap:2px}
+  .ic{font-size:18px;padding:6px 8px}tr:hover{background:var(--paper)}
+  #toast{bottom:calc(84px + env(safe-area-inset-bottom))}
+  footer{padding:14px 16px}.guide p{font-size:13.5px}#gate .box{padding:24px 20px}
+}
+@media print{header,nav,.form,.btn,.ic,footer,#toast,.row{display:none!important}main{padding:0}.screen{display:none!important}.screen.on{display:block!important}body{background:#fff}.pack table{border:1px solid #ccc}}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Edginton Stanley · Sole-trader records</div>
+  <h1>Practice Books <em>for MTD</em></h1>
+  <p>Digital records for your self-employed adviser income and expenses, kept the way HMRC now requires, with your tax bill, its payment dates, and the household's wealth plan alongside.</p>
+  <div class="hdr-right"><select class="ty num" id="hdTY" onchange="setYear(this.value)"></select><div class="lbl">tax year in view</div><div class="sync" id="sync"><i></i><span id="syncT">local only</span></div></div>
+</header>
+<nav>
+  <button class="on" data-s="dash"><svg viewBox="0 0 24 24"><path d="M3 13h8V3H3zm10 8h8v-6h-8zM3 21h8v-6H3zm10-8h8V3h-8z"/></svg><span>Overview</span></button>
+  <button data-s="inc"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 15h-2v-1.2c-1.3-.3-2.3-1.2-2.4-2.6h1.8c.1.6.5 1 1.6 1 1.1 0 1.5-.5 1.5-1 0-.6-.4-.9-1.9-1.3-1.6-.4-2.8-1-2.8-2.5 0-1.2.9-2 2.2-2.3V6h2v1.2c1.2.3 2 1.2 2.1 2.4h-1.8c-.1-.6-.5-1-1.4-1s-1.4.4-1.4.9c0 .5.4.8 1.9 1.2 1.6.4 2.8 1 2.8 2.6 0 1.3-1 2.1-2.2 2.4z"/></svg><span>Income</span></button>
+  <button data-s="exp"><svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM9 17H7v-7h2zm4 0h-2V7h2zm4 0h-2v-4h2z"/></svg><span>Expenses</span></button>
+  <button data-s="mil"><svg viewBox="0 0 24 24"><path d="M18.9 6a1.5 1.5 0 0 0-1.4-1H6.5c-.7 0-1.2.4-1.4 1L3 12v8a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h12v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-8zM6.5 16a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm11 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM5 11l1.5-4.5h11L19 11z"/></svg><span>Mileage</span></button>
+  <button data-s="tax"><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 14H4V8h16zM6 10h5v2H6zm0 4h8v2H6zm10-4h2v6h-2z"/></svg><span>Tax</span></button>
+  <button data-s="qtr"><svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V9h14z"/></svg><span>Reports</span></button>
+  <button data-s="set"><svg viewBox="0 0 24 24"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6a.5.5 0 0 0 .1-.7l-2-3.4a.5.5 0 0 0-.6-.2l-2.5 1a7.3 7.3 0 0 0-1.7-1l-.4-2.6A.5.5 0 0 0 14 2h-4a.5.5 0 0 0-.5.4l-.4 2.7c-.6.2-1.2.6-1.7 1l-2.5-1a.5.5 0 0 0-.6.2l-2 3.4a.5.5 0 0 0 .1.7L4.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6a.5.5 0 0 0-.1.7l2 3.4c.1.2.4.3.6.2l2.5-1c.5.4 1.1.7 1.7 1l.4 2.6c0 .3.2.5.5.5h4c.2 0 .5-.2.5-.4l.4-2.7c.6-.2 1.2-.6 1.7-1l2.5 1c.2.1.5 0 .6-.2l2-3.4a.5.5 0 0 0-.1-.7zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg><span>Settings</span></button>
+</nav>
+<div id="gate"><div class="box">
+  <div class="eyebrow">Edginton Stanley</div>
+  <h2 style="font-family:'Playfair Display',serif">Practice Books</h2>
+  <p>Sign in with the email and password you set in Supabase.</p>
+  <label>Email</label><input type="email" id="gEmail" autocomplete="email">
+  <label style="margin-top:10px">Password</label><input type="password" id="gPass" autocomplete="current-password" onkeydown="if(event.key==='Enter')signIn()">
+  <button class="btn gold" onclick="signIn()">Sign in</button>
+  <div class="msg" id="gMsg"></div>
+</div></div>
+<main>
+
+<section class="screen on" id="s-dash">
+  <h2>Where you stand</h2>
+  <p class="sub">Your position for the tax year in view. Tax shown is an estimate for budgeting; your accountant's figure is the one that counts.</p>
+  <div class="yrnote" id="yrNote"></div>
+  <div class="grid g4">
+    <div class="card"><div class="k">Gross income to date</div><div class="v" id="dIncome">£0</div><div class="n" id="dIncomeN"></div></div>
+    <div class="card"><div class="k">Allowable expenses</div><div class="v" id="dExp">£0</div><div class="n" id="dExpN"></div></div>
+    <div class="card"><div class="k">Profit to date</div><div class="v" id="dProfit">£0</div><div class="n" id="dProfitN"></div></div>
+    <div class="card hl click" onclick="goTo('tax')"><div class="k">Tax &amp; NI on this</div><div class="v" id="dTax">£0</div><div class="n" id="dTaxN"></div></div>
+    <div class="card click" onclick="goTo('tax')" style="grid-column:span 2"><div class="k">Pay yourself, per month</div><div class="v" id="dPay">£0</div><div class="n" id="dPayN">projected profit, less tax reserve and pension, spread over 12 months</div></div>
+  </div>
+  <div class="sec">Cash owed to HMRC</div>
+  <div class="grid g3">
+    <div class="card hl click" onclick="goTo('tax')"><div class="k">Next payment</div><div class="v" id="dNext">—</div><div class="n" id="dNextN"></div></div>
+    <div class="card"><div class="k">Tax pot vs next payment</div><div class="v" id="dPot">£0</div><div class="n" id="dPotN"></div><div class="bar"><i id="dPotBar" style="width:0%"></i></div></div>
+    <div class="card click" onclick="goTo('tax')"><div class="k">Next 12 months</div><div class="v" id="d12">£0</div><div class="n" id="d12N"></div></div>
+  </div>
+  <div class="sec">What the numbers are telling you</div>
+  <div id="insights"></div>
+  <div class="sec">Month by month</div>
+  <div class="chart"><svg id="mChart" viewBox="0 0 720 150" preserveAspectRatio="none"></svg><div class="legend"><span><i style="background:var(--navy)"></i>Income</span><span><i style="background:var(--au-2)"></i>Expenses incl. mileage</span></div></div>
+  <div class="sec">MTD quarters</div>
+  <div class="qs" id="qStrip"></div>
+  <div class="note" id="mtdNote"></div>
+</section>
+
+<section class="screen" id="s-inc">
+  <h2>Income</h2>
+  <p class="sub">Every payment you receive as a self-employed adviser. Record the gross amount on the date it lands in your business account.</p>
+  <div class="form f5" id="fInc">
+    <div><label>Date received</label><input type="date" id="iDate"></div>
+    <div><label>Source</label><select id="iSrc"><option>Practice payment</option><option>SJP fee statement</option><option>Bonus / incentive</option><option>Other income</option></select></div>
+    <div><label>Description</label><input id="iDesc" placeholder="e.g. August payment" onkeydown="if(event.key==='Enter')addIncome()"></div>
+    <div><label>Gross amount £</label><input type="text" inputmode="decimal" id="iAmt" placeholder="0.00" onkeydown="if(event.key==='Enter')addIncome()"></div>
+    <div class="row"><button class="btn gold" id="iBtn" onclick="addIncome()">Add income</button><button class="btn ghost" id="iCancel" style="display:none" onclick="cancelEdit('inc')">Cancel</button><label class="btn ghost" style="margin:0;text-transform:none;letter-spacing:0;font-size:13px">Import bank CSV<input type="file" accept=".csv,text/csv" style="display:none" onchange="importCSV(this)"></label></div>
+  </div>
+  <table><thead><tr><th>Date</th><th>Source</th><th>Description</th><th class="r">Amount</th><th></th></tr></thead><tbody id="incBody"></tbody></table>
+  <div class="sec">By tax year</div>
+  <table><thead><tr><th>Tax year</th><th class="r">Payments</th><th class="r">Gross income</th><th class="r">Expenses</th><th class="r">Profit</th><th class="r">Tax &amp; NI</th><th></th></tr></thead><tbody id="yrBody"></tbody></table>
+</section>
+
+<section class="screen" id="s-exp">
+  <h2>Expenses</h2>
+  <p class="sub">Only costs incurred wholly and exclusively for the business. Mileage has its own tab. Recurring monthly costs (accountant, phone, software) are set up once in Settings and post themselves.</p>
+  <div class="form" id="fExp">
+    <div><label>Date</label><input type="date" id="eDate"></div>
+    <div><label>Category</label><select id="eCat" onchange="mealCheck()"></select></div>
+    <div id="mealWho" style="display:none"><label>Who was it for?</label><select id="eWho" onchange="mealApply()"><option value="me">Just me, travelling on business</option><option value="client">Client or introducer was present</option></select></div>
+    <div><label>Paid to</label><input id="ePayee" placeholder="e.g. CII" list="payeeList"><datalist id="payeeList"></datalist></div>
+    <div><label>Description</label><input id="eDesc" placeholder="e.g. PFS membership 2026" onkeydown="if(event.key==='Enter')addExpense()"></div>
+    <div><label>Amount £</label><input type="text" inputmode="decimal" id="eAmt" placeholder="0.00" onkeydown="if(event.key==='Enter')addExpense()"></div>
+    <div><label>Receipt</label><label class="btn ghost rcpt" style="margin:0;text-transform:none;letter-spacing:0;font-size:13px;display:block;text-align:center"><span id="eRcptL">📎 Photo / PDF</span><input type="file" accept="image/*,application/pdf" style="display:none" id="eRcpt" onchange="rcptPicked(this)"></label></div>
+    <div class="row"><button class="btn gold" id="eBtn" onclick="addExpense()">Add expense</button><button class="btn ghost" id="eCancel" style="display:none" onclick="cancelEdit('exp')">Cancel</button><label class="btn ghost" style="margin:0;text-transform:none;letter-spacing:0;font-size:13px">Import bank CSV<input type="file" accept=".csv,text/csv" style="display:none" onchange="importCSV(this)"></label></div>
+  </div>
+  <div class="row" style="margin-bottom:10px"><label style="margin:0">Filter</label><select id="eFilter" style="width:auto" onchange="render()"><option value="">All categories</option></select><input id="eSearch" placeholder="Search…" style="width:180px" oninput="render()"></div>
+  <table><thead><tr><th>Date</th><th>Category</th><th>Paid to</th><th>Description</th><th class="r">Amount</th><th></th></tr></thead><tbody id="expBody"></tbody></table>
+  <details><summary>What can I claim as an SJP adviser?</summary><div class="guide">
+  <h3>Almost certainly your biggest claim</h3>
+  <p><b>Mileage.</b> 45p a mile to 10,000 business miles, 25p after. Every client visit, introducer meeting, seminar, networking event. Not your commute. Log it the same day; a reconstructed log at year end is the first thing HMRC challenges.</p>
+  <h3>Straightforward</h3>
+  <p><b>Professional fees and training.</b> CII/PFS membership, exam entries, study materials, CPD events. Training that maintains or updates existing skills is deductible.</p>
+  <p><b>Regulatory and practice costs you personally bear.</b> If the practice recharges you for software, PI contribution or marketing, it's deductible. If the practice pays it, it isn't yours to claim.</p>
+  <p><b>Phone and internet.</b> The business proportion, applied consistently.</p>
+  <p><b>Home working.</b> The flat rate is simplest: £10 a month for 25–50 hours, £18 for 51–100, £26 for 101+. Set it in Settings and it's added automatically.</p>
+  <p><b>Travel other than by car.</b> Train fares, parking, tolls, taxis on business journeys. Parking fines never.</p>
+  <p><b>Subsistence.</b> Reasonable meals only when travelling away from your normal base on business. Lunch near the office is living, not trading.</p>
+  <p><b>Accountancy, software, stationery, printing, postage.</b></p>
+  <h3>Not deductible, however tempting</h3>
+  <p><b>Client and introducer entertaining.</b> Coffees, lunches, gifts to clients. Record them so your accountant has the full picture, but they never reduce your tax.</p>
+  <p><b>Clothing.</b> Suits are not deductible even if only worn for work.</p>
+  <p><b>Fines, personal insurance, pension contributions.</b> Pension contributions get relief through your return, not as a business expense. See the Tax tab for how much that's worth.</p>
+  </div></details>
+</section>
+
+<section class="screen" id="s-mil">
+  <h2>Mileage</h2>
+  <p class="sub">Business journeys only: client meetings, introducers, seminars, training. Your regular trip to the Royston office is commuting and does not count. 45p per mile for the first 10,000 business miles in the tax year, then 25p.</p>
+  <div class="grid g3" style="margin-bottom:14px">
+    <div class="card"><div class="k">Business miles this year</div><div class="v" id="mMiles">0</div><div class="bar"><i id="mBar" style="width:0%"></i></div><div class="n" id="mBarN"></div></div>
+    <div class="card"><div class="k">Mileage allowance</div><div class="v" id="mAllow">£0</div><div class="n">claimable expense</div></div>
+    <div class="card"><div class="k">Journeys logged</div><div class="v" id="mCount">0</div><div class="n" id="mCountN">keep it contemporaneous</div></div>
+  </div>
+  <div class="form" id="fMil">
+    <div class="chips" id="routeChips"></div>
+    <div><label>Date</label><input type="date" id="mDate"></div>
+    <div><label>From</label><input id="mFrom" placeholder="Royston" list="fromList"><datalist id="fromList"></datalist></div>
+    <div><label>To</label><input id="mTo" placeholder="Hitchin" list="toList" onchange="suggestMiles()"><datalist id="toList"></datalist></div>
+    <div><label>Purpose / who</label><input id="mWhy" placeholder="Client review, J. Smith" onkeydown="if(event.key==='Enter')addTrip()"></div>
+    <div><label>Miles (round trip)</label><input type="text" inputmode="decimal" id="mMi" placeholder="0" onkeydown="if(event.key==='Enter')addTrip()"></div>
+    <div class="row"><button class="btn gold" id="mBtn" onclick="addTrip()">Add journey</button><button class="btn ghost" id="mCancel" style="display:none" onclick="cancelEdit('mil')">Cancel</button></div>
+  </div>
+  <table><thead><tr><th>Date</th><th>From</th><th>To</th><th>Purpose</th><th class="r">Miles</th><th class="r">Allowance</th><th></th></tr></thead><tbody id="milBody"></tbody></table>
+</section>
+
+<section class="screen" id="s-tax">
+  <h2>Your tax bill</h2>
+  <p class="sub">What you owe on the year in view, when each payment falls, and what a pension contribution would do to it. Estimates for planning; NB Accounting's figures are the ones filed.</p>
+  <div class="row" style="margin-bottom:14px"><span class="pill"><button id="tbA" class="on" onclick="setBasis('actual')">Actual to date</button><button id="tbP" onclick="setBasis('proj')">Projected full year</button></span><span id="basisNote" style="font-size:12px;color:var(--ink-3)"></span></div>
+  <div class="split">
+    <div class="card">
+      <h3>How the bill is built</h3>
+      <div id="taxBreak"></div>
+    </div>
+    <div>
+      <div class="card">
+        <h3>Set aside</h3>
+        <div class="kv"><span>Of each payment received</span><b id="tPct">0%</b></div>
+        <div class="kv"><span>Per month until the next payment</span><b id="tMonthly">£0</b></div>
+        <div class="kv"><span>In the pot so far</span><b><input type="text" inputmode="decimal" id="tPot" style="width:110px;text-align:right;padding:4px 8px;font:inherit" onchange="D.pot=num(this.value)||0;save();render()"></b></div>
+        <div class="kv big"><span id="tGapL">Still to find</span><b id="tGap">£0</b></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>Instalments already set</h3>
+        <p style="font-size:12px;color:var(--ink-2);margin-bottom:8px">HMRC takes two advance instalments for each year, on 31 January and 31 July, each half of the previous year's income tax plus Class 4 NI. The app reads them from the payments you've logged below; override here only if HMRC has told you a different figure.</p>
+        <div class="kv"><span>Liability for <span id="prevTYl"></span></span><b><input type="text" inputmode="decimal" id="tPrev" style="width:110px;text-align:right;padding:4px 8px;font:inherit" placeholder="from return" onchange="D.prev[D.ty]=num(this.value)||0;save();render()"></b></div>
+        <div id="prevSrc" style="font-size:11px;color:var(--ink-3)"></div>
+      </div>
+    </div>
+  </div>
+  <div class="sec">Payments made to HMRC</div>
+  <div class="form f5" id="fHmrc">
+    <div><label>Date paid</label><input type="date" id="hDate"></div>
+    <div><label>Amount £</label><input type="text" inputmode="decimal" id="hAmt" placeholder="0.00" onkeydown="if(event.key==='Enter')addHmrc()"></div>
+    <div><label>Note (optional)</label><input id="hNote" placeholder="e.g. 2nd payment on account" onkeydown="if(event.key==='Enter')addHmrc()"></div>
+    <div class="row"><button class="btn gold" id="hBtn" onclick="addHmrc()">Add payment</button><button class="btn ghost" id="hCancel" style="display:none" onclick="cancelHmrc()">Cancel</button></div>
+  </div>
+  <table><thead><tr><th>Date</th><th>What it was</th><th class="r">Amount</th><th></th></tr></thead><tbody id="hBody"></tbody></table>
+  <div class="sec">When it's due</div>
+  <p class="sub" style="font-size:12.5px" id="dueNote"></p>
+  <table><thead><tr><th>Date</th><th>What</th><th>Basis</th><th class="r">Amount</th></tr></thead><tbody id="dueBody"></tbody></table>
+  <div class="note"><b>How self-assessment payments work.</b> The bill for a tax year is settled on 31 January after the year ends. If it's £1,000 or more, HMRC also asks for two payments on account towards the following year, each half of this year's income tax and Class 4 NI, on 31 January and 31 July. So the January after a good year is the expensive one: the balance for the year just gone, plus the first instalment for the next. Student loan repayments are settled with the balance but aren't included in payments on account.</div>
+  <div class="sec">Paying yourself</div>
+  <div class="split">
+    <div class="card">
+      <h3>Sustainable monthly drawings</h3>
+      <p style="font-size:12.5px;color:var(--ink-2);margin-bottom:6px">What you can take for yourself each month from the projected year, after tax is reserved and your pension is funded. Sole-trader income is lumpy; the point of this number is to pay yourself the same amount every month and let the business account absorb the swings.</p>
+      <div id="payBody"></div>
+    </div>
+    <div class="card">
+      <h3>Cash buffer</h3>
+      <div id="bufBody" style="font-size:13px;color:var(--ink-2)"></div>
+    </div>
+  </div>
+  <div class="sec">Contributions this year</div>
+  <div class="split">
+    <div class="card">
+      <h3>Personal pension (net paid)</h3>
+      <p style="font-size:12px;color:var(--ink-2);margin-bottom:8px">Log what you actually pay in. The tax calculation above uses it, and the planner below shows what extra would do.</p>
+      <div class="form" style="grid-template-columns:1fr 1fr auto;padding:10px;margin-bottom:8px"><div><label>Date</label><input type="date" id="pDate"></div><div><label>Net amount £</label><input type="text" inputmode="decimal" id="pAmt" placeholder="0.00" onkeydown="if(event.key==='Enter')addPens()"></div><div><button class="btn gold sm" onclick="addPens()">Add</button></div></div>
+      <div id="pensList"></div>
+    </div>
+    <div class="card">
+      <h3>ISA subscriptions</h3>
+      <p style="font-size:12px;color:var(--ink-2);margin-bottom:8px">Not a tax deduction, but the allowance lapses on 5 April and it's the other half of structuring your own money.</p>
+      <div class="form" style="grid-template-columns:1fr 1fr auto;padding:10px;margin-bottom:8px"><div><label>Date</label><input type="date" id="sDate"></div><div><label>Amount £</label><input type="text" inputmode="decimal" id="sAmt" placeholder="0.00" onkeydown="if(event.key==='Enter')addIsa()"></div><div><button class="btn gold sm" onclick="addIsa()">Add</button></div></div>
+      <div id="isaList"></div>
+      <div id="allowBody" style="margin-top:8px"></div>
+    </div>
+  </div>
+  <div class="sec">Pension: turning tax into savings</div>
+  <div class="split">
+    <div class="card">
+      <h3>Contribution planner</h3>
+      <p style="font-size:12.5px;color:var(--ink-2);margin-bottom:6px">A personal pension contribution paid from your own money gets 20% added by HMRC in the pension, and extends your basic-rate band by the gross amount so that higher-rate tax falls away through your return. Class 4 NI isn't reduced. Slide to see the effect.</p>
+      <div class="slider"><input type="range" id="pSlide" min="0" max="60000" step="10" value="0" oninput="renderPension()"><output id="pOut">£0</output></div>
+      <div id="pChips" class="chips" style="margin-bottom:8px"></div>
+      <div id="pResult"></div>
+    </div>
+    <div class="card"><h3>What the numbers mean</h3><div id="pExplain" style="font-size:13px;color:var(--ink-2)"></div></div>
+  </div>
+  <div class="sec">Household</div>
+  <div class="split">
+    <div class="card">
+      <h3>Your household</h3>
+      <div class="form" style="grid-template-columns:1fr 1fr 1fr;padding:10px;margin-bottom:8px">
+        <div><label>Spouse name</label><input id="hName" onchange="D.house.name=this.value.trim()||'Spouse';save();render()"></div>
+        <div><label>Gross salary £/yr</label><input type="text" inputmode="decimal" id="hSp" onchange="D.house.sp=num(this.value)||0;save();render()"></div>
+        <div><label>Typical bonus £/yr</label><input type="text" inputmode="decimal" id="hBonus" onchange="D.house.bonus=num(this.value)||0;save();render()"></div>
+        <div><label>Children on child benefit</label><input type="text" inputmode="numeric" id="hKids" onchange="D.house.kids=Math.max(0,Math.round(num(this.value)||0));save();render()"></div>
+        <div><label>Salary sacrifice to pension %</label><input type="text" inputmode="decimal" id="hSac" onchange="D.house.sac=num(this.value)||0;save();render()"></div>
+        <div><label>Employer pension %</label><input type="text" inputmode="decimal" id="hEmp" onchange="D.house.emp=num(this.value)||0;save();render()"></div>
+        <div><label>Employer NI saving shared %</label><input type="text" inputmode="decimal" id="hNiSh" onchange="D.house.niSh=num(this.value)||0;save();render()"></div>
+      </div>
+      <div id="houseBody"></div>
+    </div>
+    <div class="card">
+      <h3>Monthly bills, itemised</h3>
+      <div class="form" style="grid-template-columns:2fr 1fr auto;padding:10px;margin-bottom:8px">
+        <div><label>Bill</label><input id="bName" placeholder="Mortgage" onkeydown="if(event.key==='Enter')addBill()"></div>
+        <div><label>£/month</label><input type="text" inputmode="decimal" id="bAmt" onkeydown="if(event.key==='Enter')addBill()"></div>
+        <div><button class="btn gold sm" onclick="addBill()">Add</button></div>
+      </div>
+      <div id="billsBody"></div>
+    </div>
+  </div>
+  <div class="split" style="margin-top:14px">
+    <div class="card"><h3>What your circumstances unlock</h3><div id="houseTips" style="font-size:13px;color:var(--ink-2)"></div></div>
+    <div class="card">
+      <h3>What you could afford each month</h3>
+      <div id="recoBody" style="font-size:13px;color:var(--ink-2)"></div>
+    </div>
+  </div>
+  <div class="sec">Wealth projection</div>
+  <div class="split">
+    <div class="card">
+      <h3>Contributions</h3>
+      <div class="form" style="grid-template-columns:1fr 1fr 1fr;padding:10px;margin-bottom:8px">
+        <div><label>Your pension £/mo (net)</label><input type="text" inputmode="decimal" id="wPm" onchange="D.plan.pm=num(this.value)||0;save();render()"></div>
+        <div><label>Your ISA £/mo</label><input type="text" inputmode="decimal" id="wIm" onchange="D.plan.im=num(this.value)||0;save();render()"></div>
+        <div><label>Spouse ISA £/mo</label><input type="text" inputmode="decimal" id="wSim" onchange="D.plan.sim=num(this.value)||0;save();render()"></div>
+        <div><label>Pension growth %/yr</label><input type="text" inputmode="decimal" id="wGp" onchange="D.plan.gp=num(this.value)||0;save();render()"></div>
+        <div><label>ISA growth %/yr</label><input type="text" inputmode="decimal" id="wGi" onchange="D.plan.gi=num(this.value)||0;save();render()"></div>
+      </div>
+      <div class="slider"><input type="range" id="wYrs" min="1" max="40" step="1" oninput="D.plan.yrs=+this.value;renderPlan()"><output id="wYrsO">20 yrs</output></div>
+      <p style="font-size:11px;color:var(--ink-3)">Growth is assumed net of charges, compounded monthly, no inflation adjustment. Projections are illustrations, not promises; you write that sentence for a living.</p>
+    </div>
+    <div class="card"><h3 id="planTitle">In 20 years</h3><div class="chart" style="border:0;padding:0 0 6px"><svg id="planChart" viewBox="0 0 720 210" preserveAspectRatio="none"></svg></div><div class="legend" id="planLeg" style="margin:0 0 8px"></div><div id="planBody"></div></div>
+  </div>
+  <div class="sec">Deadlines</div>
+  <table><thead><tr><th>Date</th><th>Deadline</th><th></th></tr></thead><tbody id="dlBody"></tbody></table>
+</section>
+
+<section class="screen" id="s-qtr">
+  <h2>Reports</h2>
+  <div class="row" style="margin-bottom:18px"><button class="btn" onclick="openPack()">Year-end pack for your accountant</button><button class="btn ghost" onclick="downloadICS()">Add deadlines to calendar (.ics)</button></div>
+  <div class="sec">Quarterly summary</div>
+  <div class="row" style="margin-bottom:14px">
+    <label style="margin:0">Quarter</label><select id="qSel" style="width:auto" onchange="render()"></select>
+    <button class="btn" onclick="exportQuarterCSV()">Export this quarter (CSV)</button>
+    <button class="btn ghost" onclick="exportYearCSV()">Export full year (CSV)</button>
+    <button class="btn ghost" onclick="window.print()">Print</button>
+  </div>
+  <div class="grid g3" style="margin-bottom:14px">
+    <div class="card"><div class="k">Quarter income</div><div class="v" id="qInc">£0</div></div>
+    <div class="card"><div class="k">Quarter expenses</div><div class="v" id="qExp">£0</div><div class="n">incl. mileage, excl. non-deductible</div></div>
+    <div class="card"><div class="k">Status</div><div class="v" id="qStat" style="font-size:18px">—</div><div class="n" id="qDue"></div></div>
+  </div>
+  <table><thead><tr><th>HMRC category</th><th>Your categories</th><th class="r">Amount</th></tr></thead><tbody id="qBody"></tbody></table>
+  <div class="note"><b>How to use this.</b> Send the CSV to <span class="accName"></span> with a one-line note: "Q<span id="qN">1</span> figures for MTD update, all transactions attached." They submit through their software; you don't need your own as long as they're authorised as your agent and you keep these records.</div>
+</section>
+
+<section class="screen" id="s-imp">
+  <h2>Review statement import</h2>
+  <p class="sub" id="impSub"></p>
+  <div class="row" style="margin-bottom:12px"><button class="btn gold" onclick="commitImport()">Add selected</button><button class="btn ghost" onclick="goTo('exp')">Cancel</button><span id="impCount" style="font-size:12px;color:var(--ink-3)"></span></div>
+  <table><thead><tr><th></th><th>Date</th><th>Description</th><th>Treat as</th><th>Category / source</th><th class="r">Amount</th></tr></thead><tbody id="impBody"></tbody></table>
+  <div class="note"><b>How it decides.</b> Money in from a payee you've marked as income is ticked as income. Money out to a payee you've used before is ticked with that category. Anything else is left unticked as personal; tick it and choose a category if it's business, and the app remembers the payee next time. Rows that match something already recorded, including recurring expenses, are greyed out.</div>
+</section>
+<section class="screen" id="s-pack">
+  <div class="row" style="margin-bottom:14px"><button class="btn" onclick="window.print()">Print / save as PDF</button><button class="btn ghost" onclick="goTo('qtr')">Back</button></div>
+  <div id="packBody"></div>
+</section>
+<section class="screen" id="s-set">
+  <h2>Settings</h2>
+  <p class="sub">Records sync to your account on every change. A backup at each year end in your accounts folder is sensible; HMRC can ask for records up to five years after the filing deadline.</p>
+  <div class="sec">Your business</div>
+  <div class="form" style="grid-template-columns:repeat(4,1fr)">
+    <div><label>Tax year in view</label><select id="sTY" onchange="setYear(this.value)"></select></div>
+    <div><label>Home working flat rate (for year in view)</label><select id="sHome" onchange="D.homeBy=D.homeBy||{};D.homeBy[D.ty]=this.value;save();render()"><option value="0">Not claiming</option><option value="10">£10/month (25–50 hrs)</option><option value="18">£18/month (51–100 hrs)</option><option value="26">£26/month (101+ hrs)</option></select></div>
+    <div><label>MTD start</label><select id="sMtd" onchange="save();render()"><option value="unknown">Not yet confirmed</option><option value="2026">In from April 2026</option><option value="2027">In from April 2027</option><option value="2028">In from April 2028</option><option value="no">Below threshold</option></select></div>
+    <div><label>Quarter basis</label><select id="sQB" onchange="save();render()"><option value="tax">Tax year (6 Apr – 5 Jul…)</option><option value="cal">Calendar (1 Apr – 30 Jun…)</option></select></div>
+    <div><label>Accountant</label><input id="sAcc" onchange="save();render()"></div>
+    <div><label>Student loan plan</label><select id="sSL" onchange="save();render()"><option value="">None</option><option value="1">Plan 1</option><option value="2">Plan 2</option><option value="4">Plan 4 (Scotland)</option><option value="5">Plan 5</option><option value="pg">Postgraduate</option></select></div>
+    <div><label>Expected profit this year (optional)</label><input type="text" inputmode="decimal" id="sExp" placeholder="leave blank to use run-rate" onchange="D.expected[D.ty]=num(this.value)||0;save();render()"></div>
+    <div><label>Usual starting point for journeys</label><input id="sBase" placeholder="Royston" onchange="save()"></div>
+  </div>
+  <div class="sec">Recurring monthly expenses</div>
+  <p class="sub" style="font-size:13px">Set these once. Each month's entry is posted automatically on the day you choose and appears in Expenses with a <span class="tag au">recurring</span> tag. Edit or delete individual months there if one differs.</p>
+  <div class="form f5" id="fRec">
+    <div><label>Paid to</label><input id="rPayee" placeholder="NB Accounting"></div>
+    <div><label>Category</label><select id="rCat"></select></div>
+    <div><label>Amount £ / month</label><input type="text" inputmode="decimal" id="rAmt" placeholder="0.00"></div>
+    <div><label>Starts</label><input type="date" id="rStart"></div>
+    <div class="row"><button class="btn gold" id="rBtn" onclick="addRecurring()">Add recurring</button><button class="btn ghost" id="rCancel" style="display:none" onclick="cancelRec()">Cancel</button></div>
+  </div>
+  <table><thead><tr><th>Paid to</th><th>Category</th><th class="r">Monthly</th><th>Since</th><th></th></tr></thead><tbody id="recBody"></tbody></table>
+  <div class="sec">Backup</div>
+  <div class="row">
+    <button class="btn" onclick="backup()">Download backup (JSON)</button>
+    <label class="btn ghost" style="margin:0;text-transform:none;letter-spacing:0;font-size:13px">Restore from backup <input type="file" accept=".json" style="display:none" onchange="restore(this)"></label>
+    <button class="btn ghost" onclick="if(confirm('Delete every record in this browser and your account? Download a backup first.')){D=BLANK();D.updated=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(D));push();location.reload()}">Clear all data</button>
+  </div>
+  <div class="note"><b>Privacy.</b> Records are held in your own Supabase project under your own account, readable only by you. Nobody else, including whoever hosts the page, can read them.</div>
+</section>
+
+</main>
+<div id="toast"></div>
+<footer>ES Practice Books v4.2 · Household PAYE, child benefit and projections are estimates · Records and planning tool, not tax advice. 2026/27 rates: PA £12,570 (tapered above £100k), 20/40/45% bands, Class 4 NI 6%/2%, mileage 45p/25p, payments on account at 50% where liability ≥ £1,000. Student loan thresholds are 2025/26 figures pending confirmation. Confirm final figures with your accountant.</footer>
+
+<script>
+const KEY='es_practice_books_v2';const OLDKEY='es_practice_books_v1';
+const CATS=[
+ {id:'prof',label:'Professional fees & subscriptions (CII/PFS, exams, CPD)',hmrc:'professionalFees',ded:true},
+ {id:'travel',label:'Travel: train, parking, tolls, taxi',hmrc:'travelCosts',ded:true},
+ {id:'subs',label:'Subsistence (away from base)',hmrc:'travelCosts',ded:true},
+ {id:'phone',label:'Phone & internet (business share)',hmrc:'adminCosts',ded:true},
+ {id:'soft',label:'Software & subscriptions',hmrc:'adminCosts',ded:true},
+ {id:'office',label:'Stationery, printing, postage',hmrc:'adminCosts',ded:true},
+ {id:'acct',label:'Accountancy fees',hmrc:'professionalFees',ded:true},
+ {id:'recharge',label:'Practice recharges (licences, PI, marketing)',hmrc:'otherExpenses',ded:true},
+ {id:'adv',label:'Advertising & marketing',hmrc:'advertisingCosts',ded:true},
+ {id:'ins',label:'Business insurance',hmrc:'financialCharges',ded:true},
+ {id:'bank',label:'Bank charges (business account)',hmrc:'financialCharges',ded:true},
+ {id:'ent',label:'Client / introducer entertaining & gifts',hmrc:'businessEntertainmentCosts',ded:false},
+ {id:'other',label:'Other (ask accountant)',hmrc:'otherExpenses',ded:true}];
+const HMRC={turnover:'Turnover',travelCosts:'Car, van and travel',adminCosts:'Phone, stationery and other office costs',professionalFees:'Accountancy, legal and professional',advertisingCosts:'Advertising and business entertainment',businessEntertainmentCosts:'Business entertainment (disallowed)',financialCharges:'Bank, insurance and financial charges',otherExpenses:'Other business expenses',home:'Home working (simplified)'};
+const TX={year:2026,CB1:26.05,CBO:17.25,EMPNI:0.15,ISA:20000,VAT:90000,PA:12570,BRT:37700,HR:125140,C4L:12570,C4U:50270,SPT:6845,AA:60000,POA_MIN:1000,SL:{1:{t:26065,r:.09},2:{t:28470,r:.09},4:{t:32745,r:.09},5:{t:25000,r:.09},pg:{t:21000,r:.06}}};
+const BLANK=()=>({income:[],exp:[],trips:[],recurring:[],hmrc:[],pens:[],isa:[],rules:[],deleted:[],homeBy:{},house:{name:'Spouse',sp:0,bonus:0,sac:0,emp:0,niSh:0,bills:0,kids:0},billsList:[],plan:{pm:0,im:0,sim:0,gp:6,gi:5,yrs:20},ty:'2026',home:'0',mtd:'unknown',acc:'NB Accounting',qb:'tax',sl:'',base:'Royston',pot:0,prev:{},expected:{},basis:'actual',chk:{}});
+function load(){try{let raw=localStorage.getItem(KEY);if(!raw&&localStorage.getItem(OLDKEY))raw=localStorage.getItem(OLDKEY);return Object.assign(BLANK(),JSON.parse(raw||'{}'))}catch(e){return BLANK()}}
+function merge(a,b){const out=BLANK();const del=new Set([...(a.deleted||[]),...(b.deleted||[])]);out.deleted=[...del];
+ for(const k of ['income','exp','trips','recurring','hmrc','pens','isa','rules','billsList']){const m=new Map();[...(a[k]||[]),...(b[k]||[])].forEach(r=>{if(!del.has(r.id)){const ex=m.get(r.id);if(!ex||(r.mod||'')>(ex.mod||''))m.set(r.id,r)}});out[k]=[...m.values()]}
+ const newer=(b.updated||'')>(a.updated||'')?b:a;for(const k of ['ty','home','mtd','acc','qb','sl','base','pot','prev','expected','basis','chk','updated','seeded','seeded2','homeBy','house','plan'])out[k]=newer[k]!==undefined?newer[k]:a[k];return out}
+let D=load();
+
+const q=id=>document.getElementById(id);
+function save(){D.ty=q('sTY').value||D.ty;D.mtd=q('sMtd').value;D.acc=q('sAcc').value;D.qb=q('sQB').value;D.sl=q('sSL').value;D.base=q('sBase').value.trim()||'Royston';D.updated=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(D));pushSoon()}
+const gbp=n=>(n<0?'−':'')+'£'+Math.round(Math.abs(n)).toLocaleString('en-GB');
+const gbp2=n=>(n<0?'−':'')+'£'+Math.abs(n).toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtD=s=>new Date(s).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
+const fmtDL=d=>d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const num=v=>{const n=parseFloat(String(v).replace(/[£,\s]/g,''));return isFinite(n)?n:NaN};
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function tyOf(dateStr){const d=new Date(dateStr);const y=d.getFullYear();return (d.getMonth()>3||(d.getMonth()===3&&d.getDate()>=6))?y:y-1}
+const tyLabel=y=>y+'/'+String(y+1).slice(2);
+const tyStart=y=>new Date(+(y??D.ty),3,6),tyEnd=y=>new Date(+(y??D.ty)+1,3,5,23,59,59);
+const inYear=(r,y)=>{const d=new Date(r.date);return d>=tyStart(y)&&d<=tyEnd(y)};
+const inTY=r=>inYear(r,D.ty);
+const cat=id=>CATS.find(c=>c.id===id)||CATS[CATS.length-1];
+const today=()=>new Date();
+let toastT=null,toastFn=null;function toast(html,action,fn){const t=q('toast');toastFn=fn||null;t.innerHTML=html+(action?`<button onclick="toastFn&&toastFn();q('toast').classList.remove('show')">${action}</button>`:'');t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),action?9000:3000)}
+function setYear(y){D.ty=String(y);q('sTY').value=D.ty;q('hdTY').value=D.ty;save();render()}
+function goTo(s){document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x.dataset.s===s));document.querySelectorAll('.screen').forEach(x=>x.classList.toggle('on',x.id==='s-'+s));window.scrollTo(0,0);render()}
+
+// ── Quarters ───────────────────────────────────────────────
+function quarters(y){y=+(y??D.ty);if(D.qb==='cal')return [
+ {n:1,s:new Date(y,3,1),e:new Date(y,5,30),due:new Date(y,7,7)},{n:2,s:new Date(y,6,1),e:new Date(y,8,30),due:new Date(y,10,7)},
+ {n:3,s:new Date(y,9,1),e:new Date(y,11,31),due:new Date(y+1,1,7)},{n:4,s:new Date(y+1,0,1),e:new Date(y+1,2,31),due:new Date(y+1,4,7)}];return [
+ {n:1,s:new Date(y,3,6),e:new Date(y,6,5),due:new Date(y,7,7)},{n:2,s:new Date(y,6,6),e:new Date(y,9,5),due:new Date(y,10,7)},
+ {n:3,s:new Date(y,9,6),e:new Date(y+1,0,5),due:new Date(y+1,1,7)},{n:4,s:new Date(y+1,0,6),e:new Date(y+1,3,5),due:new Date(y+1,4,7)}]}
+const inQ=(r,Q)=>{const d=new Date(r.date);return d>=Q.s&&d<=new Date(Q.e.getFullYear(),Q.e.getMonth(),Q.e.getDate(),23,59,59)};
+function qStatus(Q,now){if(D.mtd==='no'||D.mtd==='unknown'||+D.mtd>+D.ty)return {c:'na',t:D.mtd==='unknown'?'MTD status unconfirmed':'not required this year'};if(now<Q.s)return {c:'na',t:'not started'};if(now<=Q.e)return {c:'ok',t:'open · due '+fmtD(Q.due)};const days=Math.round((Q.due-now)/864e5);if(days>=0)return {c:'warn',t:'closed · due in '+days+' day'+(days===1?'':'s')};return {c:'bad',t:'overdue by '+(-days)+' days'}}
+function mtdText(){const y=+D.ty;switch(D.mtd){case 'no':return '<b>Below the MTD threshold.</b> Quarterly updates are not required, but keeping records this way makes your year-end return trivial and means you are ready if income crosses £30,000 gross.';case 'unknown':return '<b>MTD status not yet confirmed.</b> April 2026 if 2024/25 gross income was over £50,000; April 2027 if 2025/26 was over £30,000. Ask '+esc(D.acc)+' and set the answer in Settings.';default:return +D.mtd<=y?'<b>In MTD from April '+D.mtd+'.</b> Each quarter above must be submitted by '+esc(D.acc)+' by the due date, from the records you keep here. The first four late updates in your first year carry no penalty points; the year-end return still does.':'<b>MTD starts April '+D.mtd+'.</b> Nothing to submit quarterly this year. Use the time to make this habit automatic.'}}
+
+// ── Computation ────────────────────────────────────────────
+function mileageFor(y){const t=D.trips.filter(r=>inYear(r,y)).sort((a,b)=>a.date.localeCompare(b.date));let cum=0;return t.map(x=>{const m=+x.miles;const a=Math.max(0,Math.min(m,10000-cum));cum+=m;return {...x,allow:a*.45+(m-a)*.25}})}
+function homeRate(y){return +((D.homeBy||{})[y]??D.home??0)}
+function homeMonths(y,upTo){const s=tyStart(y),e=tyEnd(y);const end=upTo&&upTo<e?upTo:e;if(end<s)return 0;return Math.min(12,(end.getFullYear()-s.getFullYear())*12+end.getMonth()-s.getMonth()+1)}
+function yearFigures(y,upTo){const inc=D.income.filter(r=>inYear(r,y)),exp=D.exp.filter(r=>inYear(r,y)),mil=mileageFor(y);
+ const incT=inc.reduce((s,r)=>s+ +r.amt,0),expDed=exp.filter(r=>cat(r.cat).ded).reduce((s,r)=>s+ +r.amt,0),milT=mil.reduce((s,r)=>s+r.allow,0),miles=mil.reduce((s,r)=>s+ +r.miles,0);
+ const home=homeMonths(y,upTo)*homeRate(y);const expT=expDed+milT+home;return {inc,exp,mil,incT,expDed,milT,miles,home,expT,profit:Math.max(0,incT-expT)}}
+function pensGross(y){return (D.pens||[]).filter(r=>inYear(r,y)).reduce((s,r)=>s+ +r.amt,0)/0.8}
+function taxCalc(profit,pensionGross=0){const P=Math.max(0,profit);const ani=Math.max(0,P-pensionGross);let pa=TX.PA;if(ani>100000)pa=Math.max(0,TX.PA-(ani-100000)/2);
+ const taxable=Math.max(0,P-pa);const brt=TX.BRT+pensionGross;const hrTop=Math.max(0,TX.HR-TX.PA-TX.BRT);
+ const b20=Math.min(taxable,brt),b40=Math.max(0,Math.min(taxable-brt,hrTop)),b45=Math.max(0,taxable-brt-hrTop);
+ const tax=b20*.2+b40*.4+b45*.45;
+ const c4=Math.max(0,Math.min(P,TX.C4U)-TX.C4L)*.06+Math.max(0,P-TX.C4U)*.02;
+ const sl=D.sl&&TX.SL[D.sl]?Math.max(0,P-TX.SL[D.sl].t)*TX.SL[D.sl].r:0;
+ const c2=P<TX.SPT&&P>0?3.50*52:0;
+ return {profit:P,pa,taxable,b20,b40,b45,tax,c4,sl,c2,poaBase:tax+c4,total:tax+c4+sl}}
+function projection(y){const f=yearFigures(y,today());const s=tyStart(y),e=tyEnd(y),now=today();
+ if(now>e)return {profit:f.profit,inc:f.incT,exp:f.expT,how:'year complete',complete:true};
+ const exp=D.expected[y];if(exp>0)return {profit:exp,inc:f.incT,exp:f.expT,how:'your expected profit from Settings'};
+ const days=Math.max(1,(now-s)/864e5),frac=Math.min(1,days/365);
+ if(days<45)return {profit:f.profit,inc:f.incT,exp:f.expT,how:'too early to annualise; showing to date',early:true};
+ return {profit:Math.max(0,f.incT/frac-f.expT/frac),inc:f.incT/frac,exp:f.expT/frac,how:'run-rate: '+Math.round(frac*100)+'% of the year elapsed, scaled to 12 months'}}
+function prevLiability(y){const py=+y-1;if(D.prev[y]>0)return {v:D.prev[y],src:'entered manually'};
+ const near=(yy,m)=>(D.hmrc||[]).find(p=>Math.abs(new Date(p.date)-new Date(yy,m,31))<20*864e5);
+ const julNext=near(+y+1,6);if(julNext)return {v:2*+julNext.amt,src:'from your 31 July '+(+y+1)+' payment of '+gbp2(+julNext.amt)+', half of the '+tyLabel(py)+' bill'};
+ const f=yearFigures(py);if(f.incT>0){const t=taxCalc(f.profit,pensGross(py));return {v:t.poaBase,src:'calculated from '+tyLabel(py)+' records in the app; replace with the return figure when '+D.acc+' confirm it'}}
+ const jul=near(+y,6);if(jul)return {v:2*+jul.amt,src:'estimate: the '+tyLabel(py-1)+' bill of '+gbp2(2*+jul.amt)+' (from your 31 July '+y+' payment) used as a proxy until the '+tyLabel(py)+' return is done',est:true};
+ return {v:0,src:'no '+tyLabel(py)+' figures held; log your HMRC payments below or enter the '+tyLabel(py)+' income tax + Class 4 NI from the return'}}
+function schedule(y,liab,prevL){y=+y;const rows=[];const poaIn=prevL>=TX.POA_MIN?prevL/2:0;
+ rows.push({d:new Date(y+1,0,31),what:'1st payment on account for '+tyLabel(y),basis:'half of '+tyLabel(y-1)+' liability',amt:poaIn});
+ rows.push({d:new Date(y+1,6,31),what:'2nd payment on account for '+tyLabel(y),basis:'half of '+tyLabel(y-1)+' liability',amt:poaIn});
+ const bal=liab.total-2*poaIn;const poaOut=liab.poaBase>=TX.POA_MIN?liab.poaBase/2:0;
+ rows.push({d:new Date(y+2,0,31),what:'Balancing payment for '+tyLabel(y)+(poaOut?' + 1st payment on account for '+tyLabel(y+1):''),basis:bal<0?'refund of overpaid instalments'+(poaOut?', net of next instalment':''):'bill less instalments already paid'+(poaOut?', plus half of this year\'s liability':''),amt:bal+poaOut,bal:bal,poa:poaOut});
+ if(poaOut)rows.push({d:new Date(y+2,6,31),what:'2nd payment on account for '+tyLabel(y+1),basis:'half of '+tyLabel(y)+' liability',amt:poaOut});
+ return rows}
+
+// ── Cash events (cross-year) ───────────────────────────────
+function cashEvents(){const now=today();const nowY=tyOf(iso(now));const evs=[];
+ [nowY-1,nowY].forEach(yy=>{const prev=prevLiability(yy);const f=yearFigures(yy);if(f.incT===0&&!(prev.v>0))return;
+  const PRy=projection(yy);const Ly=taxCalc(PRy.profit,pensGross(yy));
+  schedule(yy,Ly,prev.v).forEach(r=>{if(isNaN(r.amt)||r.amt<=0)return;if(f.incT===0&&r.bal!==undefined)return;evs.push({...r,y:yy})})});
+ const paid=d=>(D.hmrc||[]).find(p=>Math.abs(new Date(p.date)-d)<20*864e5);
+ const byDate={};evs.forEach(e=>{const k=iso(e.d);if(!byDate[k]||e.amt>byDate[k].amt)byDate[k]=e});
+ return Object.values(byDate).filter(e=>e.d>=now&&!paid(e.d)).sort((a,b)=>a.d-b.d)}
+
+// ── Recurring ──────────────────────────────────────────────
+function materialiseRecurring(){let added=0;const now=today();const del=new Set(D.deleted||[]);
+ (D.recurring||[]).forEach(rc=>{const s=new Date(rc.start);let d=new Date(s.getFullYear(),s.getMonth(),1);
+  while(d<=now){const dd=new Date(d.getFullYear(),d.getMonth(),Math.min(s.getDate(),new Date(d.getFullYear(),d.getMonth()+1,0).getDate()));if(dd>now)break;
+   const id='r_'+rc.id+'_'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0');
+   if(dd>=s&&!del.has(id)&&!D.exp.some(x=>x.id===id)){D.exp.push({id,date:iso(dd),cat:rc.cat,payee:rc.payee,desc:'Monthly',amt:rc.amt,rec:rc.id});added++}
+   d=new Date(d.getFullYear(),d.getMonth()+1,1)}});
+ if(added){localStorage.setItem(KEY,JSON.stringify(D));pushSoon()}return added}
+
+// ── Render ─────────────────────────────────────────────────
+let editing={inc:null,exp:null,mil:null};
+function render(){
+ materialiseRecurring();
+ const now=today(),y=+D.ty;
+ const yrs=new Set([2024,2025,2026,2027,y]);[...D.income,...D.exp,...D.trips].forEach(r=>yrs.add(tyOf(r.date)));const yl=[...yrs].sort();
+ if(q('sTY').dataset.k!==yl.join()){q('sTY').innerHTML='';q('hdTY').innerHTML='';yl.forEach(v=>{q('sTY').add(new Option(tyLabel(v),v));q('hdTY').add(new Option(tyLabel(v),v))});q('sTY').dataset.k=yl.join()}
+ q('sTY').value=D.ty;q('hdTY').value=D.ty;q('sHome').value=String(homeRate(D.ty));q('sMtd').value=D.mtd;q('sAcc').value=D.acc;q('sQB').value=D.qb||'tax';q('sSL').value=D.sl||'';q('sBase').value=D.base||'Royston';q('sExp').value=D.expected[D.ty]>0?D.expected[D.ty]:'';
+ document.querySelectorAll('.accName').forEach(e=>e.textContent=D.acc);
+ if(!q('eCat').options.length){CATS.forEach(c=>{q('eCat').add(new Option(c.label+(c.ded?'':' — not deductible'),c.id));q('eFilter').add(new Option(c.label.split(' (')[0],c.id));q('rCat').add(new Option(c.label.split(' (')[0],c.id))});q('rCat').value='acct'}
+ if(q('qSel').dataset.qb!==(D.qb||'tax')+D.ty){q('qSel').innerHTML='';q('qSel').dataset.qb=(D.qb||'tax')+D.ty;quarters().forEach(Q=>q('qSel').add(new Option('Q'+Q.n+'  '+fmtD(Q.s)+' – '+fmtD(Q.e),Q.n)))}
+ const td=iso(now);['iDate','eDate','mDate','rStart','hDate','pDate','sDate'].forEach(i=>{if(!q(i).value)q(i).value=td});if(!q('mFrom').value&&!editing.mil)q('mFrom').placeholder=D.base||'Royston';
+ const others={};[...D.income,...D.exp,...D.trips].forEach(r=>{const v=tyOf(r.date);if(v!==y)others[v]=(others[v]||0)+1});const ok=Object.keys(others).sort();q('yrNote').innerHTML=ok.length?'Also holding '+ok.map(v=>`${others[v]} record${others[v]==1?'':'s'} in ${tyLabel(+v)}`).join(', ')+'. Use the year switch top right.':'';
+
+ // figures
+ const PG=pensGross(y);const F=yearFigures(y,now),T=taxCalc(F.profit,PG),PR=projection(y),TP=taxCalc(PR.profit,PG);
+ const basis=D.basis==='proj'&&!PR.early?'proj':'actual';const B=basis==='proj'?{f:PR,t:TP}:{f:{profit:F.profit,inc:F.incT,exp:F.expT},t:T};
+ q('dIncome').textContent=gbp(F.incT);q('dIncomeN').textContent=F.inc.length+' payment'+(F.inc.length===1?'':'s')+(PR.early||PR.complete?'':' · projected '+gbp(PR.inc));
+ q('dExp').textContent=gbp(F.expT);q('dExpN').textContent='mileage '+gbp(F.milT)+' · home '+gbp(F.home)+' · other '+gbp(F.expDed);
+ q('dProfit').textContent=gbp(F.profit);q('dProfitN').textContent=PR.early||PR.complete?'income less allowable expenses':'projected full year '+gbp(PR.profit);
+ q('dTax').textContent=gbp(T.total);q('dTaxN').textContent='tax '+gbp(T.tax)+' + NI '+gbp(T.c4)+(T.sl?' + SL '+gbp(T.sl):'')+' · '+(F.profit?Math.round(T.total/F.profit*100):0)+'% effective'+(PR.early||PR.complete?' · '+gbp((F.profit-T.total)/12)+'/mo after tax':' · full year '+gbp(TP.total));
+ const pot=+D.pot||0;const CE=cashEvents();const next=CE[0]||null;const horizon=new Date(now.getFullYear()+1,now.getMonth(),now.getDate());const next12=CE.filter(e=>e.d<=horizon);const next12T=next12.reduce((s,e)=>s+e.amt,0);
+ q('dNext').textContent=next?gbp(next.amt):'—';q('dNextN').innerHTML=next?fmtDL(next.d)+' · '+esc(next.what)+(next.bal!==undefined&&next.poa?'<br>balance '+gbp(next.bal)+' + instalment '+gbp(next.poa):''):'no payments scheduled';
+ const mToNext=next?Math.max(1,Math.round((next.d-now)/864e5/30.44)):0;
+ q('dPot').textContent=gbp(pot);q('dPotN').textContent=next?(pot>=next.amt?'covers the '+fmtD(next.d)+' payment; '+gbp(pot-next.amt)+' towards the one after':gbp(next.amt-pot)+' short · save '+gbp((next.amt-pot)/mToNext)+'/month for '+mToNext+' month'+(mToNext===1?'':'s')):'nothing scheduled';
+ q('dPotBar').style.width=(next?Math.min(100,pot/next.amt*100):0)+'%';
+ q('d12').textContent=gbp(next12T);q('d12N').innerHTML=next12.map(e=>fmtD(e.d)+' '+gbp(e.amt)).join(' · ')+(next12T>pot?'<br>'+gbp(next12T-pot)+' beyond the pot':'');
+ const prev=prevLiability(y);const SL=(PR.early||PR.complete)?T:TP;const sch=schedule(y,SL,prev.v);if(F.incT===0)sch.forEach(r=>{if(r.bal!==undefined){r.amt=NaN;r.basis='no '+tyLabel(y)+' income in the app, so the balance comes from the return';r.poa=0}else if(r.d>new Date(y+2,0,1))r.amt=NaN});
+
+ // month chart
+ (()=>{const W=720,H=150,pad={l:8,r:8,t:12,b:22};const months=[];for(let i=0;i<12;i++){const d=new Date(y,3+i,1);months.push({l:d.toLocaleDateString('en-GB',{month:'short'}),k:d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'),inc:0,exp:0})}
+  const km=r=>{const d=new Date(r.date);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')};
+  F.inc.forEach(r=>{const m=months.find(x=>x.k===km(r));if(m)m.inc+= +r.amt});F.exp.filter(r=>cat(r.cat).ded).forEach(r=>{const m=months.find(x=>x.k===km(r));if(m)m.exp+= +r.amt});F.mil.forEach(r=>{const m=months.find(x=>x.k===km(r));if(m)m.exp+=r.allow});
+  const mx=Math.max(1,...months.map(m=>Math.max(m.inc,m.exp)));const bw=(W-pad.l-pad.r)/12;let s='';
+  months.forEach((m,i)=>{const x=pad.l+i*bw;const hi=(H-pad.t-pad.b)*m.inc/mx,he=(H-pad.t-pad.b)*m.exp/mx;
+   s+=`<rect x="${x+bw*.15}" y="${H-pad.b-hi}" width="${bw*.32}" height="${hi}" fill="#101a33" rx="2"/><rect x="${x+bw*.52}" y="${H-pad.b-he}" width="${bw*.32}" height="${he}" fill="#d9a747" rx="2"/><text x="${x+bw/2}" y="${H-6}" font-size="10" text-anchor="middle" fill="#8a90a3" font-family="Inter,sans-serif">${m.l}</text>`;
+   if(m.inc>0)s+=`<text x="${x+bw*.31}" y="${H-pad.b-hi-3}" font-size="9" text-anchor="middle" fill="#4a5166" font-family="Inter,sans-serif">${m.inc>=1000?Math.round(m.inc/100)/10+'k':Math.round(m.inc)}</text>`});
+  q('mChart').innerHTML=s})();
+
+ // quarters strip
+ q('qStrip').innerHTML=quarters().map(Q=>{const qi=F.inc.filter(r=>inQ(r,Q)).reduce((s,r)=>s+ +r.amt,0);const qe=F.exp.filter(r=>inQ(r,Q)&&cat(r.cat).ded).reduce((s,r)=>s+ +r.amt,0)+F.mil.filter(r=>inQ(r,Q)).reduce((s,r)=>s+r.allow,0);const cur=now>=Q.s&&now<=Q.e;const st=qStatus(Q,now);return `<div class="q ${cur?'cur':''}"><div class="qn">Quarter ${Q.n}</div><div class="qp">${fmtD(Q.s)} – ${fmtD(Q.e)}</div><div class="qv">${gbp(qi)} <span style="font-size:13px;color:var(--ink-3)">in · ${gbp(qe)} out</span></div><div class="qd"><i class="dot ${st.c}"></i>${st.t}</div></div>`}).join('');
+ q('mtdNote').innerHTML=mtdText();
+
+ // income
+ const inc=[...F.inc].sort((a,b)=>b.date.localeCompare(a.date));
+ q('incBody').innerHTML=inc.length?inc.map(r=>`<tr><td class="mono" data-l="Date">${fmtD(r.date)}</td><td data-l="Source">${esc(r.src)}</td><td data-l="Description">${esc(r.desc)||'—'}</td><td class="amt r" data-l="Amount">${gbp2(+r.amt)}</td><td class="act r"><button class="ic" title="Edit" onclick="editRec('inc','${r.id}')">✎</button><button class="ic x" title="Delete" onclick="del('income','${r.id}')">×</button></td></tr>`).join('')+`<tr class="tot"><td colspan="3">Total for ${tyLabel(y)}</td><td class="amt r" data-l="Total">${gbp2(F.incT)}</td><td></td></tr>`:'<tr><td colspan="5" class="empty">No income recorded for this tax year. Add each practice payment as it lands.</td></tr>';
+ const yrRows={};[...yrs].forEach(v=>{const f=yearFigures(v);if(f.incT||f.expT){const t=taxCalc(f.profit,pensGross(v));yrRows[v]={n:f.inc.length,inc:f.incT,exp:f.expT,profit:f.profit,tax:t.total}}});const yk=Object.keys(yrRows).sort().reverse();
+ q('yrBody').innerHTML=yk.length?yk.map(v=>{const r=yrRows[v],cur=+v===y;return `<tr${cur?' class="due-next"':''}><td data-l="Tax year"><b>${tyLabel(+v)}</b>${cur?' <span class="tag">viewing</span>':''}</td><td class="amt r" data-l="Payments">${r.n}</td><td class="amt r" data-l="Gross income">${gbp(r.inc)}</td><td class="amt r" data-l="Expenses">${gbp(r.exp)}</td><td class="amt r" data-l="Profit">${gbp(r.profit)}</td><td class="amt r" data-l="Tax &amp; NI">${gbp(r.tax)}</td><td class="act r">${cur?'':`<button class="btn sm ghost" onclick="setYear('${v}')">View</button>`}</td></tr>`}).join(''):'<tr><td colspan="7" class="empty">Nothing entered yet.</td></tr>';
+
+ // expenses
+ const f=q('eFilter').value,srch=(q('eSearch').value||'').toLowerCase();const el=F.exp.filter(r=>(!f||r.cat===f)&&(!srch||(r.payee+' '+r.desc+' '+cat(r.cat).label).toLowerCase().includes(srch))).sort((a,b)=>b.date.localeCompare(a.date));
+ q('expBody').innerHTML=el.length?el.map(r=>{const c=cat(r.cat);return `<tr><td class="mono" data-l="Date">${fmtD(r.date)}</td><td data-l="Category">${esc(c.label.split(' (')[0])}${c.ded?'':' <span class="tag no">not deductible</span>'}${r.rec?' <span class="tag au">recurring</span>':''}</td><td data-l="Paid to">${esc(r.payee)||'—'}</td><td data-l="Description">${esc(r.desc)||'—'}${r.receipt?` <a class="rl" title="View receipt" onclick="openReceipt('${esc(r.receipt)}')">📎</a>`:''}</td><td class="amt r" data-l="Amount">${gbp2(+r.amt)}</td><td class="act r"><button class="ic" title="Edit" onclick="editRec('exp','${r.id}')">✎</button><button class="ic x" title="Delete" onclick="del('exp','${r.id}')">×</button></td></tr>`}).join('')+`<tr class="tot"><td colspan="4">Deductible total <span class="tag">home working ${gbp(F.home)} added automatically</span></td><td class="amt r" data-l="Deductible total">${gbp2(F.expDed+F.home)}</td><td></td></tr>`:'<tr><td colspan="6" class="empty">No expenses yet. Start with your CII/PFS membership, and set up your accountant\'s fee as a recurring expense in Settings.</td></tr>';
+ q('payeeList').innerHTML=[...new Set(D.exp.map(r=>r.payee).filter(Boolean))].map(p=>`<option value="${esc(p)}">`).join('');
+
+ // mileage
+ q('mMiles').textContent=Math.round(F.miles).toLocaleString();q('mAllow').textContent=gbp(F.milT);q('mCount').textContent=F.mil.length;q('mBar').style.width=Math.min(100,F.miles/100)+'%';q('mBarN').textContent=F.miles>=10000?'over 10,000 — remainder at 25p':Math.round(10000-F.miles).toLocaleString()+' miles left at 45p';
+ const last=F.mil.length?F.mil[F.mil.length-1]:null;q('mCountN').textContent=last?'last: '+fmtD(last.date)+' · '+esc(last.to):'keep it contemporaneous';
+ q('milBody').innerHTML=F.mil.length?[...F.mil].reverse().map(r=>`<tr><td class="mono" data-l="Date">${fmtD(r.date)}</td><td data-l="From">${esc(r.from)}</td><td data-l="To">${esc(r.to)}</td><td data-l="Purpose">${esc(r.why)||'—'}</td><td class="amt r" data-l="Miles">${(+r.miles).toLocaleString()}</td><td class="amt r" data-l="Allowance">${gbp2(r.allow)}</td><td class="act r"><button class="ic" title="Edit" onclick="editRec('mil','${r.id}')">✎</button><button class="ic x" title="Delete" onclick="del('trips','${r.id}')">×</button></td></tr>`).join(''):'<tr><td colspan="7" class="empty">No journeys logged. Every client visit outside your base belongs here.</td></tr>';
+ const routes={};[...D.trips].sort((a,b)=>a.date.localeCompare(b.date)).forEach(t=>{const k=(t.from||'').toLowerCase()+'→'+(t.to||'').toLowerCase();routes[k]=routes[k]||{from:t.from,to:t.to,n:0};routes[k].n++;routes[k].miles=t.miles;routes[k].why=t.why});
+ const top=Object.values(routes).sort((a,b)=>b.n-a.n).slice(0,6);q('routeChips').innerHTML=top.length?'<span style="font-size:11px;color:var(--ink-3);align-self:center">Frequent:</span>'+top.map(r=>`<button type="button" class="chip" onclick="useRoute(${JSON.stringify(r).replace(/"/g,'&quot;')})">${esc(r.from)} → <b>${esc(r.to)}</b> · ${r.miles} mi</button>`).join(''):'';
+ q('fromList').innerHTML=[...new Set(D.trips.map(t=>t.from).filter(Boolean))].map(p=>`<option value="${esc(p)}">`).join('');q('toList').innerHTML=[...new Set(D.trips.map(t=>t.to).filter(Boolean))].map(p=>`<option value="${esc(p)}">`).join('');
+
+ // tax tab
+ q('tbA').classList.toggle('on',basis==='actual');q('tbP').classList.toggle('on',basis==='proj');q('tbP').disabled=!!PR.early;
+ q('basisNote').textContent=(TX.year&&y>TX.year?'⚠ using '+tyLabel(TX.year)+' rates · ':'')+(basis==='proj'?PR.how:(PR.early?'Projection available once ~6 weeks of the year have passed':'figures entered so far this year'));
+ const t=B.t;const rows=[['Profit',gbp(t.profit),'income '+gbp(B.f.inc)+' less expenses '+gbp(B.f.exp)],['Personal allowance','−'+gbp(t.pa),t.pa<TX.PA?'tapered: £1 lost per £2 over £100,000':'tax-free'],['Taxable income',gbp(t.taxable),''],...(PG>0?[['Pension contributions (gross)',gbp(PG),'basic-rate band extended by this amount']]:[]),['Basic rate 20%',gbp(t.b20*.2),'on '+gbp(t.b20)],['Higher rate 40%',gbp(t.b40*.4),t.b40?'on '+gbp(t.b40):'none, below £50,270'],['Additional rate 45%',gbp(t.b45*.45),t.b45?'on '+gbp(t.b45):''],['Income tax',gbp(t.tax),'',1],['Class 4 NI',gbp(t.c4),'6% £12,570–£50,270, 2% above'],['Class 2 NI',t.c2?gbp(t.c2):'£0',t.c2?'voluntary £3.50/wk protects State Pension record':'treated as paid; profits above £6,845'],['Student loan',gbp(t.sl),D.sl?'plan '+D.sl.toUpperCase()+' via self-assessment':'no plan set'],['Total due',gbp(t.total),'',2]];
+ q('taxBreak').innerHTML=rows.filter(r=>r[1]!=='£0'||r[3]||['Profit','Personal allowance','Taxable income'].includes(r[0])).map(r=>`<div class="kv${r[3]===2?' big':''}"><span>${r[0]}${r[2]?'<br><span class="dim" style="font-size:11px">'+r[2]+'</span>':''}</span><b${r[3]?' style="color:var(--navy)"':''}>${r[1]}</b></div>`).join('');
+ const projInc=projection(tyOf(iso(now))).inc||B.f.inc||1;q('tPct').textContent=Math.round(next12T/projInc*100)+'%';q('tMonthly').textContent=next?gbp(Math.max(0,(next.amt-pot))/mToNext):'£0';q('tPot').value=pot||'';q('tGap').textContent=gbp(Math.max(0,next12T-pot));q('tGapL').textContent=pot>=next12T&&next12T>0?'Covered for 12 months, surplus':'Still to find for the next 12 months';if(pot>next12T)q('tGap').textContent=gbp(pot-next12T);
+ q('prevTYl').textContent=tyLabel(y-1);q('tPrev').value=D.prev[D.ty]>0?D.prev[D.ty]:'';q('tPrev').placeholder=prev.v?Math.round(prev.v):'from return';q('prevSrc').textContent=prev.src;
+ q('dueNote').textContent=(PR.early||PR.complete)?'Based on the figures entered for '+tyLabel(y)+'.':'Based on the projected full-year bill of '+gbp(TP.total)+' ('+PR.how+'), because payments are settled on the whole year, not the year so far.';
+ const paidNear=d=>(D.hmrc||[]).find(p=>Math.abs(new Date(p.date)-d)<20*864e5);
+ q('hBody').innerHTML=(D.hmrc||[]).length?[...D.hmrc].sort((a,b)=>b.date.localeCompare(a.date)).map(p=>{const d=new Date(p.date);const m=d.getMonth(),yy=d.getFullYear();let what=p.note||'';if(!what){if(m===6)what='2nd payment on account for '+tyLabel(yy-1);else if(m===0)what='Balance for '+tyLabel(yy-2)+' + 1st payment on account for '+tyLabel(yy-1);else what='Payment to HMRC'}return `<tr><td class="mono" data-l="Date">${fmtD(p.date)}</td><td data-l="What">${esc(what)}</td><td class="amt r" data-l="Amount">${gbp2(+p.amt)}</td><td class="act r"><button class="ic" title="Edit" onclick="editHmrc('${p.id}')">✎</button><button class="ic x" onclick="del('hmrc','${p.id}')">×</button></td></tr>`}).join(''):'<tr><td colspan="4" class="empty">Log every payment you make to HMRC here. The instalment amounts and the "next payment" figure work from them.</td></tr>';
+ let nextMarked=false;q('dueBody').innerHTML=sch.map(r=>{const past=r.d<now;const isNext=!past&&!nextMarked&&r.amt>0;if(isNext)nextMarked=true;const pd=paidNear(r.d);return `<tr class="${past?'due-past':''}${isNext?' due-next':''}"><td class="mono" data-l="Date">${fmtDL(r.d)}${pd?' <span class="tag" style="background:#e3f1ea;color:var(--ok)">paid '+gbp2(+pd.amt)+'</span>':past?' <span class="tag">past</span>':isNext?' <span class="tag au">next</span>':''}</td><td data-l="What">${esc(r.what)}</td><td data-l="Basis" style="font-size:12px;color:var(--ink-2)">${esc(r.basis)}${r.bal!==undefined&&r.poa?'<br>balance '+gbp(r.bal)+' + instalment '+gbp(r.poa):''}</td><td class="amt r" data-l="Amount">${isNaN(r.amt)?'—':gbp(r.amt)}</td></tr>`}).join('');
+ // pay yourself, buffer, contributions, allowances
+ (()=>{const pensNet=(D.pens||[]).filter(r=>inYear(r,y)).reduce((s,r)=>s+ +r.amt,0);const isaT=(D.isa||[]).filter(r=>inYear(r,y)).reduce((s,r)=>s+ +r.amt,0);
+  const P=PR.profit,TT=TP.total,after=Math.max(0,P-TT-pensNet);const monthly=after/12;
+  const months={};F.inc.forEach(r=>{const k=r.date.slice(0,7);months[k]=(months[k]||0)+ +r.amt});const mv=Object.values(months);const mn=mv.length?Math.min(...mv):0,mx=mv.length?Math.max(...mv):0,av=mv.length?mv.reduce((a,b)=>a+b,0)/mv.length:0;
+  q('payBody').innerHTML=`<div class="kv"><span>Projected profit</span><b>${gbp(P)}</b></div><div class="kv"><span>Less tax &amp; NI reserve</span><b>−${gbp(TT)}</b></div><div class="kv"><span>Less pension paid in</span><b>−${gbp(pensNet)}</b></div><div class="kv big"><span>Pay yourself, per month</span><b>${gbp(monthly)}</b></div><div class="kv"><span>Reserve for tax, per month</span><b>${gbp(TT/12)}</b></div>${mv.length>1?`<div class="kv"><span>Monthly income so far: low / average / high</span><b style="font-size:13px">${gbp(mn)} / ${gbp(av)} / ${gbp(mx)}</b></div>`:''}`;
+  const buffer=3*monthly+(next?next.amt:0);const pot=+D.pot||0;
+  q('bufBody').innerHTML=`<p>With income swinging between ${mv.length>1?gbp(mn)+' and '+gbp(mx)+' a month':'months'}, a sensible floor in the business account is three months of drawings plus the next HMRC payment: <b>${gbp(buffer)}</b>.</p><p style="margin-top:8px">Tax pot currently ${gbp(pot)}. ${next?'Next HMRC payment '+gbp(next.amt)+' on '+fmtDL(next.d)+', '+Math.round((next.d-now)/864e5)+' days away'+(pot>=next.amt?'; covered.':'; '+gbp(next.amt-pot)+' still to find, about '+gbp((next.amt-pot)/Math.max(1,Math.round((next.d-now)/864e5/30.44)))+' a month.'):''}</p>`;
+  q('pensList').innerHTML=(D.pens||[]).filter(r=>inYear(r,y)).sort((a,b)=>b.date.localeCompare(a.date)).map(r=>`<div class="kv"><span class="mono">${fmtD(r.date)}</span><b>${gbp2(+r.amt)} <span class="dim" style="font-size:11px">= ${gbp(+r.amt/0.8)} gross</span> <button class="ic x" onclick="del('pens','${r.id}')">×</button></b></div>`).join('')||'<div class="empty" style="padding:8px">None logged for '+tyLabel(y)+'.</div>';
+  q('isaList').innerHTML=(D.isa||[]).filter(r=>inYear(r,y)).sort((a,b)=>b.date.localeCompare(a.date)).map(r=>`<div class="kv"><span class="mono">${fmtD(r.date)}</span><b>${gbp2(+r.amt)} <button class="ic x" onclick="del('isa','${r.id}')">×</button></b></div>`).join('')||'<div class="empty" style="padding:8px">None logged for '+tyLabel(y)+'.</div>';
+  const relev=Math.max(3600,P);const pCap=Math.min(TX.AA,relev);
+  q('allowBody').innerHTML=`<div class="kv"><span>ISA used</span><b>${gbp(isaT)} <span class="dim" style="font-size:11px">of ${gbp(TX.ISA)}</span></b></div><div class="bar"><i style="width:${Math.min(100,isaT/TX.ISA*100)}%"></i></div><div class="kv" style="margin-top:8px"><span>Pension gross vs allowance</span><b>${gbp(PG)} <span class="dim" style="font-size:11px">of ${gbp(pCap)}${pCap<TX.AA?' (limited by earnings)':''}</span></b></div><div class="bar"><i style="width:${Math.min(100,PG/pCap*100)}%"></i></div><div style="font-size:11px;color:var(--ink-3);margin-top:6px">Both lapse on 5 April ${y+1}. Unused pension allowance can be carried forward three years; ISA cannot.</div>`;
+  // insights
+  const ins=[];const daysLeft=Math.round((tyEnd(y)-now)/864e5);const lastTrip=D.trips.filter(inTY).map(r=>r.date).sort().pop();const dSince=lastTrip?Math.round((now-new Date(lastTrip))/864e5):null;
+  if(F.inc.length&&(dSince===null||dSince>14))ins.push({c:'bad',t:`<b>No mileage logged for ${dSince===null?'this year':dSince+' days'}.</b> Every client visit is worth 45p a mile; a fortnight of missed journeys is typically £20–40 of tax relief gone. <a onclick="goTo('mil')">Log a journey</a>`});
+  if(!PR.early&&TP.b40>0&&PG<TP.b40)ins.push({t:`<b>${gbp(TP.b40)} of projected profit is taxed at 40%.</b> A gross pension contribution of ${gbp(Math.max(0,TP.b40))} (${gbp(Math.max(0,TP.b40)*.8)} from you) would bring all of it back to 20%. <a onclick="goTo('tax')">Open the planner</a>`});
+  if(!PR.early&&PR.profit>100000)ins.push({c:'bad',t:`<b>Projected profit is over £100,000.</b> You're in the 60% band where personal allowance tapers. A pension contribution of ${gbp(PR.profit-100000)} gross restores it. <a onclick="goTo('tax')">See the effect</a>`});
+  if(next&&pot<next.amt){const mths=mToNext;ins.push({c:pot/next.amt<.5&&mths<=3?'bad':'',t:`<b>Next HMRC payment of ${gbp(next.amt)} is ${mths} month${mths===1?'':'s'} away</b> and the pot holds ${gbp(pot)}. Set aside ${gbp((next.amt-pot)/mths)} a month to be ready.`})}
+  else if(next)ins.push({c:'good',t:`<b>Next HMRC payment is covered.</b> ${gbp(next.amt)} due ${fmtDL(next.d)}; pot holds ${gbp(pot)}.`});
+  if(F.miles>8500&&F.miles<10000)ins.push({t:`<b>${Math.round(10000-F.miles).toLocaleString()} miles left at 45p.</b> After 10,000 the rate halves to 25p, so the remaining high-rate miles are worth logging carefully.`});
+  if(!PR.early&&PR.inc>TX.VAT*0.85)ins.push({t:`<b>Projected turnover is near the £90,000 VAT threshold.</b> Most adviser remuneration is VAT-exempt intermediary income, but confirm your position with ${esc(D.acc)} before you cross it.`});
+  if(daysLeft<75&&daysLeft>0){if(isaT<TX.ISA)ins.push({t:`<b>${daysLeft} days to 5 April.</b> ${gbp(TX.ISA-isaT)} of ISA allowance unused; it doesn't carry forward.`});if(PG<pCap)ins.push({t:`<b>${daysLeft} days to 5 April.</b> Pension contributions made by then count against ${tyLabel(y)}; ${gbp(pCap-PG)} of allowance still available this year.`})}
+  if(F.inc.length>=3&&F.expDed+F.milT<F.incT*0.02)ins.push({t:`<b>Expenses are under 2% of income.</b> That's unusually low even for an adviser. Phone, home working, subscriptions and parking are the usual gaps.`});
+  if(TX.year&&y>TX.year)ins.unshift({c:'bad',t:`<b>The tax rates loaded are for ${tyLabel(TX.year)}</b> but you're viewing ${tyLabel(y)}, so every calculation here uses last year's allowances and bands until rates.json is updated on GitHub. Ask for the new file and swap it in; two minutes.`});
+  if(!ins.length)ins.push({c:'good',t:'Nothing needs attention. Keep logging.'});
+  q('insights').innerHTML=ins.slice(0,5).map(i=>`<div class="ins ${i.c||''}">${i.t}</div>`).join('')})();
+ // household
+ (()=>{const H=D.house=Object.assign({name:'Spouse',sp:0,bonus:0,sac:0,emp:0,niSh:0,bills:0,kids:0},D.house||{});const P=D.plan=Object.assign({pm:0,im:0,sim:0,gp:6,gi:5,yrs:20},D.plan||{});
+  if(!(D.billsList||[]).length&&H.bills>0){D.billsList=[{id:uid(),name:'Household bills',amt:H.bills}];H.bills=0}
+  q('hName').value=H.name;q('hSp').value=H.sp||'';q('hBonus').value=H.bonus||'';q('hKids').value=H.kids||'';q('hSac').value=H.sac||'';q('hEmp').value=H.emp||'';q('hNiSh').value=H.niSh||'';
+  ['wPm','wIm','wSim','wGp','wGi'].forEach((id,i)=>q(id).value=[P.pm||'',P.im||'',P.sim||'',P.gp,P.gi][i]);q('wYrs').value=P.yrs;
+  document.querySelectorAll('#s-tax h3').forEach(e=>{});
+  const bills=(D.billsList||[]);const billsT=bills.reduce((s,b)=>s+ +b.amt,0);
+  q('billsBody').innerHTML=bills.length?bills.map(b=>`<div class="kv"><span>${esc(b.name)}</span><b>${gbp2(+b.amt)} <button class="ic x" onclick="delBill('${b.id}')">×</button></b></div>`).join('')+`<div class="kv big"><span>Total</span><b>${gbp(billsT)}/mo</b></div>`:'<div class="empty" style="padding:8px">Add each bill once; the household position uses the total.</div>';
+  const pensNet2=(D.pens||[]).filter(r=>inYear(r,y)).reduce((s,r)=>s+ +r.amt,0);
+  const myMonthly=Math.max(0,PR.profit-TP.total-pensNet2)/12;q('dPay').textContent=gbp(myMonthly);q('dPayN').textContent=PR.early?'to date; projection available after ~6 weeks of the year':'projected profit '+gbp(PR.profit)+' less tax reserve and pension, over 12 months';
+  const sacAmt=H.sp*(H.sac||0)/100;const spTaxable=Math.max(0,H.sp-sacAmt)+(H.bonus||0);const sp=paye(spTaxable);
+  const spPenYr=sacAmt+H.sp*(H.emp||0)/100+sacAmt*TX.EMPNI*(H.niSh||0)/100;
+  const inTot=myMonthly+sp.net/12;const surplus=inTot-billsT;
+  q('houseBody').innerHTML=H.sp>0?`<div class="kv"><span>You, after tax &amp; pension</span><b>${gbp(myMonthly)}/mo</b></div><div class="kv"><span>${esc(H.name)} take-home <span class="dim" style="font-size:11px">after ${gbp(sacAmt)} sacrificed${H.bonus?', incl. bonus':''}</span></span><b>${gbp(sp.net/12)}/mo</b></div><div class="kv"><span>Into ${esc(H.name)}'s pension each year <span class="dim" style="font-size:11px">sacrifice + employer${H.niSh?' + NI share':''}</span></span><b>${gbp(spPenYr)}</b></div><div class="kv"><span>Household bills</span><b>−${gbp(billsT)}/mo</b></div><div class="kv big"><span>${surplus>=0?'Monthly surplus':'Monthly shortfall'}</span><b style="color:${surplus>=0?'var(--ok)':'var(--bad)'}">${gbp(surplus)}</b></div>`:'<div class="empty" style="padding:10px">Add the salary and this fills in.</div>';
+  const tips=[];const myANI=Math.max(0,PR.profit-pensGross(y));const hisHR=myANI>TX.PA+TX.BRT,spHR=spTaxable>TX.PA+TX.BRT;
+  if(H.sac>0)tips.push(`<b>${esc(H.name)}'s salary sacrifice is working hard:</b> each £100 sacrificed costs ${spHR?'£58':'£72'} of take-home (${spHR?'40% tax + 2%':'20% tax + 8%'} NI avoided)${H.niSh?', plus the employer NI share you\'ve set':''}. Increasing it is usually the cheapest pension money in the household.`);
+  if(H.sp>0&&H.sp<TX.PA&&!hisHR)tips.push('<b>Marriage allowance available:</b> the lower earner applies at gov.uk/marriage-allowance (their Government Gateway, five minutes); HMRC adjusts both tax codes and it can be backdated four years, about £252 a year.');
+  else tips.push('<b>Marriage allowance:</b> not available to you; it only works when one of you earns under the personal allowance and the other pays basic rate. Worth remembering if either of you ever takes a career break: the claim is backdatable four years.');
+  if(H.kids>0){const cb=52*(TX.CB1+(H.kids-1)*TX.CBO);const top=Math.max(myANI,spTaxable);const pct=Math.max(0,Math.min(1,(top-60000)/20000));
+   if(pct>0)tips.push(`<b>Child benefit clawback:</b> the higher adjusted income of ${gbp(top)} claws back ${Math.round(pct*100)}% of ${gbp(cb)}, costing ${gbp(cb*pct)} a year. ${top===myANI?'A gross pension contribution of '+gbp(Math.max(0,myANI-60000))+' from you':'More salary sacrifice from '+esc(H.name)} would take that income to £60,000 and keep it all. In practice: claim the benefit regardless and either repay through self-assessment or elect not to receive payments; claiming protects the stay-at-home parent\'s State Pension credits.`);
+   else tips.push(`<b>Child benefit:</b> ${gbp(cb)} a year and safe at these incomes. Claim it within 3 months of birth (gov.uk/child-benefit); it also triggers the child\'s NI number at 16.`)}
+  else tips.push(`<b>When a child arrives:</b> claim child benefit immediately even if clawback would take it all back, because the claim itself protects NI credits toward the non-earning parent\'s State Pension; you can elect to receive no payments and owe nothing. At your incomes, pension contributions or ${esc(H.name)}'s sacrifice are the levers that keep the higher earner under £60,000.`);
+  if(spTaxable>96000)tips.push(`<b>${esc(H.name)} is ${spTaxable>100000?'in':'close to'} the £100,000 taper:</b> adjusted income of ${gbp(spTaxable)} ${spTaxable>100000?'is losing personal allowance at £1 per £2, a 60% effective rate on the slice above £100,000':'is one pay rise or bonus from losing personal allowance at 60% effective'}. ${spTaxable>100000?'Raising salary sacrifice by '+gbp(spTaxable-100000)+' (about '+(H.sp?Math.ceil((spTaxable-100000)/H.sp*100):0)+' points) brings it back':'A small increase in sacrifice absorbs the bonus'}; bonuses can often be sacrificed too if elected before award.`);
+  if(hisHR&&!spHR)tips.push(`<b>Savings placement:</b> hold cash in ${esc(H.name)}'s name: £1,000 savings allowance against your £500.`);
+  if(hisHR&&spHR)tips.push('<b>Savings placement:</b> you are both higher rate, so each of you has only a £500 savings allowance. Cash beyond the emergency fund belongs inside ISAs (or premium bonds for the tax pot itself) rather than in taxable accounts in either name.');
+  q('houseTips').innerHTML=tips.map(t=>'<p style="margin-bottom:8px">'+t+'</p>').join('');
+  // recommendations
+  const fundT=6*billsT;const pot=+D.pot||0;const fundGap=Math.max(0,fundT-0);
+  const recs=[];let rem=Math.max(0,surplus);
+  const toBRm=Math.max(0,Math.min(TX.AA-pensGross(y),PR.profit-TX.PA-TX.BRT-pensGross(y)))*0.8/12;
+  if(billsT>0){const ef=Math.min(rem*0.4,fundT/24);if(ef>25){recs.push(['Emergency fund until it holds '+gbp(fundT),ef]);rem-=ef}}
+  if(toBRm>10){const pm=Math.min(rem,toBRm);recs.push(['Your pension (clears 40% tax; £100 costs £60)',pm]);rem-=pm}
+  if(rem>10){const half=rem/2;recs.push(['Your ISA',half],[esc(H.name)+"'s ISA",rem-half]);rem=0}
+  q('recoBody').innerHTML=surplus>0?recs.map(r=>`<div class="kv"><span>${r[0]}</span><b>${gbp(r[1])}/mo</b></div>`).join('')+`<div style="margin-top:8px"><button class="btn sm ghost" onclick="D.plan.pm=${Math.round(recs.find(r=>r[0].includes('pension'))?.[1]||0)};D.plan.im=${Math.round(recs.find(r=>r[0]==='Your ISA')?.[1]||0)};D.plan.sim=${Math.round(recs.find(r=>r[0].includes("ISA")&&r[0].includes("'s"))?.[1]||0)};save();render()">Use these in the projection</button></div><p style="font-size:11px;color:var(--ink-3);margin-top:8px">A starting allocation from your surplus, not advice: fund first, then the highest-relief pension money, then ISAs split between you.</p>`:'<div class="empty" style="padding:10px">Fill in salary and bills; recommendations come from the surplus.</div>';
+  renderPlan(myMonthly,spPenYr)})();
+ renderPension();
+ const dls=[{d:new Date(y+1,0,31),t:'Online self-assessment return for '+tyLabel(y-1)+' and balancing payment'},{d:new Date(y+1,3,5),t:'End of '+tyLabel(y)+' tax year: ISA and pension allowances lapse'},{d:new Date(y+1,6,31),t:'2nd payment on account for '+tyLabel(y)},{d:new Date(y+1,9,5),t:'Register for self-assessment if newly self-employed'},{d:new Date(y+2,0,31),t:'Return and balancing payment for '+tyLabel(y)}];
+ if(D.mtd!=='no'&&D.mtd!=='unknown'&&+D.mtd<=y)quarters().forEach(Q=>dls.push({d:Q.due,t:'MTD quarterly update Q'+Q.n}));
+ dls.sort((a,b)=>a.d-b.d);q('dlBody').innerHTML=dls.map(x=>{const days=Math.round((x.d-now)/864e5);return `<tr class="${days<0?'due-past':''}"><td class="mono" data-l="Date">${fmtDL(x.d)}</td><td data-l="Deadline">${esc(x.t)}</td><td class="r" data-l="" style="font-size:12px;color:${days<0?'var(--ink-3)':days<30?'var(--bad)':'var(--ink-2)'}">${days<0?'passed':days===0?'today':'in '+days+' days'}</td></tr>`}).join('');
+
+ // quarterly
+ const Q=quarters()[+q('qSel').value-1]||quarters()[0];q('qN').textContent=Q.n;
+ const qi=F.inc.filter(r=>inQ(r,Q)),qe=F.exp.filter(r=>inQ(r,Q)),qt=F.mil.filter(r=>inQ(r,Q));
+ const qiT=qi.reduce((s,r)=>s+ +r.amt,0),qmil=qt.reduce((s,r)=>s+r.allow,0),qh=3*homeRate(y);
+ const qrows={};qe.forEach(r=>{const c=cat(r.cat);qrows[c.hmrc]=qrows[c.hmrc]||{amt:0,cats:new Set(),ded:c.ded};qrows[c.hmrc].amt+= +r.amt;qrows[c.hmrc].cats.add(c.label.split(' (')[0])});
+ if(qmil){qrows.travelCosts=qrows.travelCosts||{amt:0,cats:new Set(),ded:true};qrows.travelCosts.amt+=qmil;qrows.travelCosts.cats.add('Mileage '+Math.round(qt.reduce((s,r)=>s+ +r.miles,0))+' mi')}
+ if(qh)qrows.home={amt:qh,cats:new Set(['Flat rate £'+homeRate(y)+' × 3 months']),ded:true};
+ const qeT=Object.values(qrows).filter(v=>v.ded).reduce((s,v)=>s+v.amt,0);
+ q('qInc').textContent=gbp(qiT);q('qExp').textContent=gbp(qeT);const st=qStatus(Q,now);q('qStat').innerHTML=`<i class="dot ${st.c}"></i> ${st.t}`;q('qDue').textContent='update due '+fmtDL(Q.due);
+ q('qBody').innerHTML=`<tr><td data-l="HMRC category"><b>${HMRC.turnover}</b></td><td data-l="Detail">${qi.length} receipt${qi.length===1?'':'s'}</td><td class="amt r" data-l="Amount"><b>${gbp2(qiT)}</b></td></tr>`+Object.entries(qrows).map(([k,v])=>`<tr><td data-l="HMRC category">${HMRC[k]}${v.ded?'':' <span class="tag no">disallowed</span>'}</td><td data-l="Detail">${esc([...v.cats].join(', '))}</td><td class="amt r" data-l="Amount">${gbp2(v.amt)}</td></tr>`).join('')+(Object.keys(qrows).length?'':'<tr><td colspan="3" class="empty">No expenses in this quarter.</td></tr>');
+
+ // recurring
+ q('recBody').innerHTML=(D.recurring||[]).length?D.recurring.map(r=>`<tr><td data-l="Paid to">${esc(r.payee)}</td><td data-l="Category">${esc(cat(r.cat).label.split(' (')[0])}</td><td class="amt r" data-l="Monthly">${gbp2(+r.amt)}</td><td class="mono" data-l="Since">${fmtD(r.start)}</td><td class="act r"><button class="ic" title="Edit" onclick="editRecurring('${r.id}')">✎</button><button class="ic x" title="Stop (keeps months already posted)" onclick="delRecurring('${r.id}')">×</button></td></tr>`).join(''):'<tr><td colspan="5" class="empty">None yet. Your accountant\'s monthly fee is the obvious first one.</td></tr>';
+}
+function setBasis(b){D.basis=b;save();render()}
+function renderPension(){const y=+D.ty;const PR=projection(y),F=yearFigures(y,today());const basis=D.basis==='proj'&&!PR.early?'proj':'actual';const P=basis==='proj'?PR.profit:F.profit;
+ const PG=pensGross(y);const base=taxCalc(P,PG);const maxG=Math.max(0,Math.min(TX.AA-PG,P-PG));q('pSlide').max=Math.max(100,Math.ceil(maxG/100)*100);
+ const toBR=Math.max(0,Math.min(maxG,P-TX.PA-TX.BRT-PG)),toPA=Math.max(0,Math.min(maxG,P-100000-PG));
+ q('pChips').innerHTML=(toBR>0?`<button type="button" class="chip" onclick="q('pSlide').value=${Math.round(toBR)};renderPension()">Clear higher rate: <b>${gbp(toBR)}</b> gross</button>`:'')+(toPA>0?`<button type="button" class="chip" onclick="q('pSlide').value=${Math.round(toPA)};renderPension()">Restore personal allowance: <b>${gbp(toPA)}</b> gross</button>`:'')+`<button type="button" class="chip" onclick="q('pSlide').value=0;renderPension()">Reset</button>`;
+ const G=Math.min(+q('pSlide').value,maxG);q('pSlide').value=G;q('pOut').textContent=gbp(G)+' gross'+(PG>0?' extra':'');
+ const withP=taxCalc(P,PG+G);const netPaid=G*.8,relief=G-netPaid,extra=base.tax-withP.tax,cost=netPaid-extra;
+ q('pResult').innerHTML=G>0?`<div class="kv"><span>You pay in</span><b>${gbp(netPaid)}</b></div><div class="kv"><span>HMRC adds at source (20%)</span><b>${gbp(relief)}</b></div><div class="kv"><span>Lands in pension</span><b>${gbp(G)}</b></div><div class="kv"><span>Income tax bill falls by</span><b>${gbp(extra)}</b></div><div class="kv"><span>Total tax relief</span><b>${gbp(relief+extra)} <span class="dim" style="font-size:11px">(${Math.round((relief+extra)/G*100)}% of the gross contribution)</span></b></div><div class="kv big"><span>Net cost to you of ${gbp(G)} in the pension</span><b>${gbp(cost)}</b></div><div class="kv"><span>Tax &amp; NI due after contribution</span><b>${gbp(withP.total)} <span class="dim" style="font-size:11px">was ${gbp(base.total)}</span></b></div>`:'<div class="empty" style="padding:14px">Move the slider or tap a target above.</div>';
+ let ex='';if(P<=TX.PA+TX.BRT)ex=`<p>On a profit of <b>${gbp(P)}</b> you're a basic-rate taxpayer, so a contribution gets the 20% added in the pension but nothing further through your return. Still worth doing for the growth and the eventual tax-free cash, but the tax lever here is small.</p>`;
+ else{ex=`<p>On a profit of <b>${gbp(P)}</b> you're paying 40% on <b>${gbp(base.b40)}</b>. A gross contribution of <b>${gbp(toBR)}</b> pushes that whole slice back into the 20% band: HMRC adds 20% inside the pension and the other 20% comes back through your return as a lower bill. Every £100 in the pension costs you £60.</p>`;if(P>100000)ex+=`<p>Above £100,000 you also lose personal allowance at £1 per £2, an effective 60% rate on the slice between £100,000 and £125,140. A contribution of <b>${gbp(toPA)}</b> restores it, so relief on that slice is 60%: every £100 in the pension costs £40.</p>`}
+ ex+=`<p>Limits: relief is capped at the higher of £3,600 and your relevant earnings, and the annual allowance is £60,000 gross including carry forward rules. Contribute before 5 April ${y+1} for it to count against ${tyLabel(y)}. Class 4 NI is unaffected. As an adviser you know the rest; this is here so the number is in front of you when you decide.</p>`;
+ q('pExplain').innerHTML=ex}
+
+// ── Household ──
+function addBill(){const a=num(q('bAmt').value);if(!q('bName').value.trim()||!(a>0)){toast('Name and amount are needed.');return}D.billsList=D.billsList||[];D.billsList.push(stamp({id:uid(),name:q('bName').value.trim(),amt:a}));q('bName').value='';q('bAmt').value='';save();render()}
+function delBill(id){D.billsList=D.billsList.filter(b=>b.id!==id);D.deleted.push(id);save();render()}
+function fv(monthly,ratePct,years){const r=ratePct/100/12,n=years*12;return r>0?monthly*((Math.pow(1+r,n)-1)/r):monthly*n}
+function fvAnnual(annual,ratePct,years){const g=ratePct/100;let v=0;for(let i=0;i<years;i++)v=(v+annual)*(1+g);return v}
+function fvSeries(monthly,ratePct,years){const r=ratePct/100/12;const out=[0];let v=0;for(let m=1;m<=years*12;m++){v=(v+monthly)*(1+r);if(m%12===0)out.push(v)}return out}
+function fvAnnualSeries(annual,ratePct,years){const g=ratePct/100;const out=[0];let v=0;for(let i=1;i<=years;i++){v=(v+annual)*(1+g);out.push(v)}return out}
+function renderPlan(myMonthly,spPenYr){const P=D.plan;q('wYrsO').textContent=P.yrs+' yrs';q('planTitle').textContent='In '+P.yrs+' years';
+ (()=>{const yrs=P.yrs;const S=[{n:'Your pension',c:'#101a33',s:fvSeries((P.pm||0)/0.8,P.gp||0,yrs)},{n:((D.house||{}).name||'Spouse')+"'s pension",c:'#3a4a7a',s:fvAnnualSeries(spPenYr||0,P.gp||0,yrs)},{n:'Your ISA',c:'#c8952a',s:fvSeries(P.im||0,P.gi||0,yrs)},{n:((D.house||{}).name||'Spouse')+"'s ISA",c:'#efd183',s:fvSeries(P.sim||0,P.gi||0,yrs)}].filter(x=>x.s[x.s.length-1]>0);
+  const W=720,H=210,pad={l:8,r:64,t:14,b:22};const tot=[];for(let i=0;i<=yrs;i++)tot.push(S.reduce((a,x)=>a+x.s[i],0));const mx=Math.max(1,tot[yrs]);
+  const X=i=>pad.l+(W-pad.l-pad.r)*i/yrs,Y=v=>H-pad.b-(H-pad.t-pad.b)*v/mx;
+  let svg='';let base=new Array(yrs+1).fill(0);
+  S.forEach(x=>{let top=base.map((b,i)=>b+x.s[i]);let d='M'+X(0)+','+Y(base[0]);for(let i=0;i<=yrs;i++)d+=' L'+X(i)+','+Y(top[i]);for(let i=yrs;i>=0;i--)d+=' L'+X(i)+','+Y(base[i]);svg+=`<path d="${d} Z" fill="${x.c}" opacity="0.92"/>`;base=top});
+  const step=yrs>25?10:yrs>12?5:yrs>6?2:1;for(let i=step;i<=yrs;i+=step)svg+=`<text x="${X(i)}" y="${H-6}" font-size="10" text-anchor="middle" fill="#8a90a3" font-family="Inter,sans-serif">${i}y</text>`;
+  [0.5,1].forEach(f=>{const v=mx*f;svg+=`<line x1="${pad.l}" x2="${W-pad.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="#d9d2c1" stroke-dasharray="3 4" stroke-width="1"/>`});
+  svg+=`<text x="${W-pad.r+6}" y="${Y(mx)+4}" font-size="12" fill="#141a2b" font-family="'Playfair Display',serif" font-weight="600">${gbp(mx)}</text><text x="${W-pad.r+6}" y="${Y(mx/2)+4}" font-size="10" fill="#8a90a3" font-family="Inter,sans-serif">${gbp(mx/2)}</text>`;
+  q('planChart').innerHTML=svg;q('planLeg').innerHTML=S.map(x=>`<span><i style="background:${x.c}"></i>${esc(x.n)}</span>`).join('')})();
+ const pg=fv((P.pm||0)/0.8,P.gp||0,P.yrs);const ig=fv(P.im||0,P.gi||0,P.yrs);const sg=fv(P.sim||0,P.gi||0,P.yrs);const kp=fvAnnual(spPenYr||0,P.gp||0,P.yrs);
+ const tot=pg+ig+sg+kp;const put=((P.pm||0)+(P.im||0)+(P.sim||0))*12*P.yrs+(spPenYr||0)*P.yrs;
+ q('planBody').innerHTML=(P.pm||P.im||P.sim||spPenYr)?`${P.pm?`<div class="kv"><span>Your pension <span class="dim" style="font-size:11px">${gbp(P.pm)}/mo net = ${gbp(P.pm/0.8)}/mo gross at ${P.gp}%</span></span><b>${gbp(pg)}</b></div>`:''}${spPenYr?`<div class="kv"><span>${esc((D.house||{}).name||'Spouse')}'s workplace pension <span class="dim" style="font-size:11px">${gbp(spPenYr)}/yr at ${P.gp}%</span></span><b>${gbp(kp)}</b></div>`:''}${P.im?`<div class="kv"><span>Your ISA <span class="dim" style="font-size:11px">${gbp(P.im)}/mo at ${P.gi}%</span></span><b>${gbp(ig)}</b></div>`:''}${P.sim?`<div class="kv"><span>${esc((D.house||{}).name||'Spouse')}'s ISA <span class="dim" style="font-size:11px">${gbp(P.sim)}/mo at ${P.gi}%</span></span><b>${gbp(sg)}</b></div>`:''}<div class="kv big"><span>Household total</span><b>${gbp(tot)}</b></div><div class="kv"><span class="dim">Of which contributions</span><b class="dim">${gbp(put)}</b></div><div class="kv"><span class="dim">Growth</span><b class="dim">${gbp(tot-put)}</b></div>`:'<div class="empty" style="padding:10px">Set monthly amounts, or use the recommendation button.</div>'}
+function paye(gross){const PA=gross>100000?Math.max(0,TX.PA-(gross-100000)/2):TX.PA;const tx=Math.max(0,Math.min(gross-PA,TX.BRT))*.2+Math.max(0,Math.min(gross-PA-TX.BRT,TX.HR-TX.PA-TX.BRT))*.4+Math.max(0,gross-PA-TX.BRT-(TX.HR-TX.PA-TX.BRT))*.45;const ni=Math.max(0,Math.min(gross,TX.C4U)-12570)*.08+Math.max(0,gross-TX.C4U)*.02;return {tax:Math.max(0,tx),ni,net:gross-Math.max(0,tx)-ni}}
+
+
+// ── Meal categorisation ────────────────────────────────────
+function mealCheck(){const c=q('eCat').value;const show=c==='subs'||c==='ent';q('mealWho').style.display=show?'':'none';if(show)q('eWho').value=c==='ent'?'client':'me'}
+function mealApply(){const who=q('eWho').value;const was=q('eCat').value;const now=who==='client'?'ent':'subs';if(was!==now){q('eCat').value=now;toast(who==='client'?'Filed as <b>entertaining</b>: with a client present the whole bill, including your own meal, is not deductible.':'Filed as <b>subsistence</b>: your own meal on a qualifying business trip, deductible in full.')}}
+
+// ── Mutations ──────────────────────────────────────────────
+function afterAdd(kind,rec,amountText,edited){const v=tyOf(rec.date);if(v!==+D.ty){toast(`<span>${kind} of <b>${amountText}</b> ${edited?'saved':'added'} to <b>${tyLabel(v)}</b>. You're viewing ${tyLabel(+D.ty)}.</span>`,'View '+tyLabel(v),()=>setYear(v))}else toast(`<span>${kind} of <b>${amountText}</b> ${edited?'updated':'added'}.</span>`)}
+function stamp(r){r.mod=new Date().toISOString();return r}
+function addIncome(){const a=num(q('iAmt').value);if(!q('iDate').value){toast('Enter the date received.');return}if(!(a>0)){toast('Enter an amount greater than zero.');return}const rec=stamp({id:editing.inc||uid(),date:q('iDate').value,src:q('iSrc').value,desc:q('iDesc').value.trim(),amt:a});if(editing.inc)D.income=D.income.map(r=>r.id===rec.id?rec:r);else D.income.push(rec);const ed=!!editing.inc;cancelEdit('inc',true);save();render();afterAdd('Income',rec,gbp2(a),ed)}
+function addExpense(){const a=num(q('eAmt').value);if(!q('eDate').value){toast('Enter the date.');return}if(!(a>0)){toast('Enter an amount greater than zero.');return}const old=editing.exp?D.exp.find(r=>r.id===editing.exp):null;const rec=stamp({id:editing.exp||uid(),date:q('eDate').value,cat:q('eCat').value,payee:q('ePayee').value.trim(),desc:q('eDesc').value.trim(),amt:a,rec:old?old.rec:undefined,receipt:old?old.receipt:undefined});if(editing.exp)D.exp=D.exp.map(r=>r.id===rec.id?rec:r);else D.exp.push(rec);const ed=!!editing.exp;const pending=rcptFile;cancelEdit('exp',true);save();render();afterAdd('Expense',rec,gbp2(a),ed);if(pending)uploadReceipt(rec.id,pending)}
+function addTrip(){const m=num(q('mMi').value);if(!q('mDate').value){toast('Enter the date.');return}if(!(m>0)){toast('Enter the miles for the round trip.');return}const rec=stamp({id:editing.mil||uid(),date:q('mDate').value,from:q('mFrom').value.trim()||D.base||'Royston',to:q('mTo').value.trim(),why:q('mWhy').value.trim(),miles:m});if(editing.mil)D.trips=D.trips.map(r=>r.id===rec.id?rec:r);else D.trips.push(rec);const ed=!!editing.mil;cancelEdit('mil',true);save();render();afterAdd('Journey',rec,m+' miles',ed)}
+function editRec(kind,id){const src={inc:'income',exp:'exp',mil:'trips'}[kind];const r=D[src].find(x=>x.id===id);if(!r)return;editing[kind]=id;
+ if(kind==='inc'){q('iDate').value=r.date;q('iSrc').value=r.src;q('iDesc').value=r.desc||'';q('iAmt').value=r.amt;q('iBtn').textContent='Save changes';q('iCancel').style.display='';q('fInc').classList.add('editing');q('fInc').scrollIntoView({behavior:'smooth',block:'start'})}
+ if(kind==='exp'){q('eDate').value=r.date;q('eCat').value=r.cat;mealCheck();q('ePayee').value=r.payee||'';q('eDesc').value=r.desc||'';q('eAmt').value=r.amt;q('eBtn').textContent='Save changes';q('eCancel').style.display='';q('fExp').classList.add('editing');q('fExp').scrollIntoView({behavior:'smooth',block:'start'})}
+ if(kind==='mil'){q('mDate').value=r.date;q('mFrom').value=r.from||'';q('mTo').value=r.to||'';q('mWhy').value=r.why||'';q('mMi').value=r.miles;q('mBtn').textContent='Save changes';q('mCancel').style.display='';q('fMil').classList.add('editing');q('fMil').scrollIntoView({behavior:'smooth',block:'start'})}}
+function cancelEdit(kind,keepDate){editing[kind]=null;if(kind==='exp'){q('mealWho').style.display='none';rcptFile=null;q('eRcpt').value='';q('eRcptL').textContent='📎 Photo / PDF';q('eRcpt').parentElement.classList.remove('has')}const m={inc:['fInc','iBtn','iCancel','Add income',['iAmt','iDesc']],exp:['fExp','eBtn','eCancel','Add expense',['eAmt','eDesc','ePayee']],mil:['fMil','mBtn','mCancel','Add journey',['mMi','mTo','mWhy','mFrom']]}[kind];q(m[0]).classList.remove('editing');q(m[1]).textContent=m[3];q(m[2]).style.display='none';m[4].forEach(i=>q(i).value='')}
+function del(k,id){if(!confirm('Delete this record?'))return;if(k==='exp'){const r=D.exp.find(x=>x.id===id);if(r&&r.receipt&&sb)sb.storage.from('receipts').remove([r.receipt]).catch(()=>{})}D[k]=D[k].filter(r=>r.id!==id);D.deleted=D.deleted||[];D.deleted.push(id);save();render();toast('Deleted.')}
+function useRoute(r){q('mFrom').value=r.from;q('mTo').value=r.to;q('mMi').value=r.miles;if(r.why&&!q('mWhy').value)q('mWhy').value=r.why;q('mWhy').focus()}
+function suggestMiles(){if(q('mMi').value)return;const to=q('mTo').value.trim().toLowerCase();const from=(q('mFrom').value.trim()||D.base||'').toLowerCase();const hit=[...D.trips].reverse().find(t=>(t.to||'').toLowerCase()===to&&(t.from||'').toLowerCase()===from)||[...D.trips].reverse().find(t=>(t.to||'').toLowerCase()===to);if(hit){q('mMi').value=hit.miles;toast('Miles filled from your last trip to '+esc(hit.to)+'; change if different.')}}
+let editingRec=null;
+function addRecurring(){const a=num(q('rAmt').value);if(!q('rPayee').value.trim()||!(a>0)||!q('rStart').value){toast('Payee, amount and start date are needed.');return}D.recurring=D.recurring||[];
+ if(editingRec){const old=D.recurring.find(r=>r.id===editingRec);const rec=stamp({id:old.id,payee:q('rPayee').value.trim(),cat:q('rCat').value,amt:a,start:q('rStart').value});D.recurring=D.recurring.map(r=>r.id===rec.id?rec:r);
+  D.exp=D.exp.filter(x=>{if(x.rec!==rec.id)return true;if(x.date<rec.start){D.deleted.push(x.id);return false}return true});
+  if(rec.start<old.start)D.deleted=D.deleted.filter(id=>!id.startsWith('r_'+rec.id+'_'));
+  D.exp.forEach(x=>{if(x.rec===rec.id&&+x.amt===+old.amt&&x.cat===old.cat&&x.payee===old.payee){x.amt=rec.amt;x.cat=rec.cat;x.payee=rec.payee;stamp(x)}});
+  cancelRec();save();const n=materialiseRecurring();render();toast(`Recurring expense updated${n?'; '+n+' earlier month'+(n===1?'':'s')+' added':''}.`);return}
+ D.recurring.push(stamp({id:uid(),payee:q('rPayee').value.trim(),cat:q('rCat').value,amt:a,start:q('rStart').value}));q('rPayee').value='';q('rAmt').value='';save();const n=materialiseRecurring();render();toast(`Recurring expense set up${n?'; '+n+' month'+(n===1?'':'s')+' posted':''}.`)}
+function editRecurring(id){const r=D.recurring.find(x=>x.id===id);if(!r)return;editingRec=id;q('rPayee').value=r.payee;q('rCat').value=r.cat;q('rAmt').value=r.amt;q('rStart').value=r.start;q('rBtn').textContent='Save changes';q('rCancel').style.display='';q('fRec').classList.add('editing');q('fRec').scrollIntoView({behavior:'smooth',block:'start'})}
+function cancelRec(){editingRec=null;q('rPayee').value='';q('rAmt').value='';q('rStart').value='';q('rBtn').textContent='Add recurring';q('rCancel').style.display='none';q('fRec').classList.remove('editing')}
+function delRecurring(id){if(!confirm('Stop this recurring expense? Months already posted stay in Expenses.'))return;D.recurring=D.recurring.filter(r=>r.id!==id);D.deleted.push(id);save();render()}
+
+// ── Pension / ISA ──────────────────────────────────────────
+function addPens(){const a=num(q('pAmt').value);if(!q('pDate').value||!(a>0)){toast('Date and amount are needed.');return}D.pens=D.pens||[];D.pens.push(stamp({id:uid(),date:q('pDate').value,amt:a}));q('pAmt').value='';save();render();toast('Pension contribution of <b>'+gbp2(a)+'</b> logged; '+gbp(a/0.8)+' gross.')}
+function addIsa(){const a=num(q('sAmt').value);if(!q('sDate').value||!(a>0)){toast('Date and amount are needed.');return}D.isa=D.isa||[];D.isa.push(stamp({id:uid(),date:q('sDate').value,amt:a}));q('sAmt').value='';save();render();toast('ISA subscription of <b>'+gbp2(a)+'</b> logged.')}
+
+// ── Bank CSV import ────────────────────────────────────────
+const SEED_RULES=[{m:'anthropic',kind:'exp',cat:'soft',payee:'Anthropic (Claude)'},{m:'chartered insurance',kind:'exp',cat:'prof',payee:'CII'},{m:'cii ',kind:'exp',cat:'prof',payee:'CII'},{m:'nb accounting',kind:'exp',cat:'acct',payee:'NB Accounting'},{m:'ncp',kind:'exp',cat:'travel',payee:'NCP parking'},{m:'ringgo',kind:'exp',cat:'travel',payee:'RingGo parking'},{m:'justpark',kind:'exp',cat:'travel',payee:'JustPark'},{m:'trainline',kind:'exp',cat:'travel',payee:'Trainline'},{m:'thameslink',kind:'exp',cat:'travel',payee:'Thameslink'},{m:'great northern',kind:'exp',cat:'travel',payee:'Great Northern'},{m:'lner',kind:'exp',cat:'travel',payee:'LNER'},{m:'edginton',kind:'inc',src:'Practice payment'},{m:'st. james',kind:'inc',src:'SJP fee statement'},{m:'st james',kind:'inc',src:'SJP fee statement'},{m:'sjp',kind:'inc',src:'SJP fee statement'},{m:'hmrc',kind:'hmrc'}];
+function parseCSV(text){const rows=[];let row=[],cell='',inq=false;for(let i=0;i<text.length;i++){const c=text[i];if(inq){if(c==='"'){if(text[i+1]==='"'){cell+='"';i++}else inq=false}else cell+=c}else{if(c==='"')inq=true;else if(c===','){row.push(cell);cell=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(cell);rows.push(row);row=[];cell=''}else cell+=c}}if(cell||row.length){row.push(cell);rows.push(row)}return rows.filter(r=>r.some(x=>x.trim()))}
+function parseDate(s){s=(s||'').trim();let m;if(m=s.match(/^(\d{4})-(\d{2})-(\d{2})/))return `${m[1]}-${m[2]}-${m[3]}`;if(m=s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/)){let y=m[3].length===2?'20'+m[3]:m[3];return `${y}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`}if(m=s.match(/^(\d{1,2})\s+([A-Za-z]{3})[a-z]*\s+(\d{4})/)){const mo=['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'].indexOf(m[2].slice(0,3).toLowerCase());if(mo>=0)return `${m[3]}-${String(mo+1).padStart(2,'0')}-${m[1].padStart(2,'0')}`}const d=new Date(s);return isNaN(d)?null:iso(d)}
+let IMPORT=[];
+function importCSV(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const rows=parseCSV(r.result);if(rows.length<2)throw new Error('no rows');const hdr=rows[0].map(x=>x.trim().toLowerCase());const find=re=>hdr.findIndex(x=>re.test(x));
+ const cDate=find(/date/),cDesc=[find(/desc|narrative|details|memo|counter ?party|name|reference|transaction/)].find(i=>i>=0)??-1,cAmt=find(/^amount|^value|amount \(gbp\)|^money$/),cIn=find(/credit|paid in|money in|deposit/),cOut=find(/debit|paid out|money out|withdraw/);
+ if(cDate<0||(cAmt<0&&cIn<0&&cOut<0))throw new Error('could not find date and amount columns; headers were: '+hdr.join(', '));
+ const descCols=hdr.map((x,i)=>i).filter(i=>i!==cDate&&i!==cAmt&&i!==cIn&&i!==cOut&&/desc|narrative|details|memo|counter|name|reference|transaction|type|category/.test(hdr[i]));
+ const existing=new Set([...D.income.map(r=>r.date+'|'+(+r.amt).toFixed(2)),...D.exp.map(r=>r.date+'|'+(+r.amt).toFixed(2))]);const recMonths=new Set(D.exp.filter(r=>r.rec).map(r=>r.date.slice(0,7)+'|'+(+r.amt).toFixed(2)));
+ const rules=[...(D.rules||[]),...SEED_RULES];IMPORT=[];
+ rows.slice(1).forEach((row,ix)=>{const date=parseDate(row[cDate]);if(!date)return;let amt=0;if(cAmt>=0)amt=num(row[cAmt]);else amt=(cIn>=0?(num(row[cIn])||0):0)-(cOut>=0?(num(row[cOut])||0):0);if(!isFinite(amt)||amt===0)return;
+  const desc=(descCols.length?descCols:[cDesc]).filter(i=>i>=0).map(i=>row[i]).filter(Boolean).join(' · ').trim()||'(no description)';const dl=desc.toLowerCase();
+  const rule=rules.find(x=>dl.includes(x.m.toLowerCase()));const credit=amt>0;
+  let kind=credit?(rule&&rule.kind==='inc'?'inc':'skip'):(rule&&rule.kind==='exp'?'exp':rule&&rule.kind==='hmrc'?'hmrc':'skip');if(rule&&rule.kind==='skip')kind='skip';
+  const dup=existing.has(date+'|'+Math.abs(amt).toFixed(2))||(!credit&&recMonths.has(date.slice(0,7)+'|'+Math.abs(amt).toFixed(2)))||(kind==='hmrc'&&(D.hmrc||[]).some(p=>Math.abs(new Date(p.date)-new Date(date))<10*864e5&&Math.abs(+p.amt-Math.abs(amt))<1));
+  IMPORT.push({ix,date,desc,amt:Math.abs(amt),credit,kind,cat:rule&&rule.cat||'other',src:rule&&rule.src||'Practice payment',payee:rule&&rule.payee||desc.split(/[·\s]{2,}|\s{2,}/)[0].slice(0,40),dup,on:!dup&&kind!=='skip'})});
+ if(!IMPORT.length)throw new Error('no usable rows');renderImport();goTo('imp')}catch(e){toast('Could not read that file: '+(e.message||e))}};r.readAsText(f);inp.value=''}
+function renderImport(){const dups=IMPORT.filter(r=>r.dup).length;q('impSub').textContent=IMPORT.length+' transactions found'+(dups?', '+dups+' already recorded':'')+'. Tick what belongs to the business.';
+ q('impBody').innerHTML=IMPORT.map((r,i)=>`<tr class="${r.dup?'imp-dup':''}"><td data-l=""><input type="checkbox" style="width:18px;height:18px" ${r.on?'checked':''} ${r.dup?'disabled':''} onchange="IMPORT[${i}].on=this.checked;impCount()"></td><td class="mono" data-l="Date">${fmtD(r.date)}</td><td data-l="Description" style="font-size:12.5px">${esc(r.desc)}${r.dup?' <span class="tag">already recorded</span>':''}</td><td data-l="Treat as">${r.credit?'<span class="tag">money in</span> income':`<select style="padding:4px 6px;font-size:12px" onchange="IMPORT[${i}].kind=this.value;IMPORT[${i}].on=this.value!=='skip';renderImport()"><option value="exp" ${r.kind==='exp'?'selected':''}>expense</option><option value="hmrc" ${r.kind==='hmrc'?'selected':''}>HMRC payment</option><option value="skip" ${r.kind==='skip'?'selected':''}>personal / skip</option></select>`}</td><td data-l="Category">${r.kind==='hmrc'?'<span class="tag">logged under Tax → payments</span>':r.credit?`<select style="padding:4px 6px;font-size:12px" onchange="IMPORT[${i}].src=this.value">${['Practice payment','SJP fee statement','Bonus / incentive','Other income'].map(s=>`<option ${r.src===s?'selected':''}>${s}</option>`).join('')}</select>`:`<select style="padding:4px 6px;font-size:12px" onchange="IMPORT[${i}].cat=this.value;IMPORT[${i}].on=true;IMPORT[${i}].kind='exp';this.closest('tr').querySelector('input').checked=true;impCount()">${CATS.map(c=>`<option value="${c.id}" ${r.cat===c.id?'selected':''}>${c.label.split(' (')[0]}</option>`).join('')}</select>`}</td><td class="amt r" data-l="Amount" style="color:${r.credit?'var(--ok)':'inherit'}">${r.credit?'+':'−'}${gbp2(r.amt)}</td></tr>`).join('');impCount()}
+function impCount(){const n=IMPORT.filter(r=>r.on&&!r.dup).length;q('impCount').textContent=n+' selected'}
+function commitImport(){let ni=0,ne=0,nh=0;D.rules=D.rules||[];D.hmrc=D.hmrc||[];IMPORT.filter(r=>r.on&&!r.dup).forEach(r=>{if(r.kind==='hmrc'){D.hmrc.push(stamp({id:uid(),date:r.date,amt:r.amt,note:''}));nh++;return}if(r.credit){D.income.push(stamp({id:uid(),date:r.date,src:r.src,desc:r.desc.slice(0,60),amt:r.amt}));ni++;learnRule(r.desc,{kind:'inc',src:r.src})}else{D.exp.push(stamp({id:uid(),date:r.date,cat:r.cat,payee:r.payee,desc:'Imported',amt:r.amt}));ne++;learnRule(r.desc,{kind:'exp',cat:r.cat,payee:r.payee})}});save();render();goTo(ne?'exp':'inc');toast(`Imported <b>${ni}</b> income, <b>${ne}</b> expense${nh?' and <b>'+nh+'</b> HMRC payment':''} record${ne+ni+nh===1?'':'s'}.`)}
+function learnRule(desc,rule){const key=desc.toLowerCase().replace(/[0-9]{2,}.*$/,'').replace(/[^a-z ]/g,' ').replace(/\s+/g,' ').trim().split(' ').slice(0,3).join(' ');if(key.length<3)return;D.rules=D.rules.filter(x=>x.m!==key);D.rules.push({m:key,...rule})}
+
+// ── Year-end pack & calendar ───────────────────────────────
+function openPack(){const y=+D.ty,F=yearFigures(y),PG=pensGross(y),T=taxCalc(F.profit,PG);const byCat={};F.exp.forEach(r=>{const c=cat(r.cat);byCat[c.hmrc]=byCat[c.hmrc]||{amt:0,ded:c.ded};byCat[c.hmrc].amt+= +r.amt});if(F.milT){byCat.travelCosts=byCat.travelCosts||{amt:0,ded:true};byCat.travelCosts.amt+=F.milT}if(F.home)byCat.home={amt:F.home,ded:true};
+ const pensNet=(D.pens||[]).filter(r=>inYear(r,y)).reduce((s,r)=>s+ +r.amt,0);
+ q('packBody').innerHTML=`<div class="pack"><div class="eyebrow">Edginton Stanley · William Hitchcock · sole trader</div><h2 style="margin-top:4px">Year-end pack ${tyLabel(y)}</h2><div class="meta">Prepared ${fmtDL(today())} from ES Practice Books for ${esc(D.acc)}. Cash basis. All figures in £.</div>
+ <h2>Summary</h2><table><tbody><tr><td>Turnover</td><td class="amt r">${gbp2(F.incT)}</td></tr><tr><td>Allowable expenses (incl. mileage ${gbp2(F.milT)} on ${Math.round(F.miles).toLocaleString()} miles, home working ${gbp2(F.home)})</td><td class="amt r">${gbp2(F.expT)}</td></tr><tr class="tot"><td>Net profit</td><td class="amt r">${gbp2(F.profit)}</td></tr><tr><td>Personal pension contributions paid (net)</td><td class="amt r">${gbp2(pensNet)}</td></tr><tr><td>Estimated income tax + Class 4 NI (for information)</td><td class="amt r">${gbp2(T.poaBase)}</td></tr></tbody></table>
+ <h2>Expenses by HMRC category</h2><table><thead><tr><th>Category</th><th class="r">Amount</th></tr></thead><tbody>${Object.entries(byCat).map(([k,v])=>`<tr><td>${HMRC[k]}${v.ded?'':' (disallowed)'}</td><td class="amt r">${gbp2(v.amt)}</td></tr>`).join('')}</tbody></table>
+ <h2>Income</h2><table><thead><tr><th>Date</th><th>Source</th><th>Description</th><th class="r">Amount</th></tr></thead><tbody>${[...F.inc].sort((a,b)=>a.date.localeCompare(b.date)).map(r=>`<tr><td class="mono">${fmtD(r.date)}</td><td>${esc(r.src)}</td><td>${esc(r.desc)}</td><td class="amt r">${gbp2(+r.amt)}</td></tr>`).join('')}<tr class="tot"><td colspan="3">Total</td><td class="amt r">${gbp2(F.incT)}</td></tr></tbody></table>
+ <h2>Expenses</h2><table><thead><tr><th>Date</th><th>Category</th><th>Paid to</th><th>Receipt</th><th class="r">Amount</th></tr></thead><tbody>${[...F.exp].sort((a,b)=>a.date.localeCompare(b.date)).map(r=>`<tr><td class="mono">${fmtD(r.date)}</td><td>${esc(cat(r.cat).label.split(' (')[0])}${cat(r.cat).ded?'':' (disallowed)'}</td><td>${esc(r.payee)}</td><td>${r.receipt?'held':r.rec?'recurring':''}</td><td class="amt r">${gbp2(+r.amt)}</td></tr>`).join('')}</tbody></table>
+ <h2>Mileage log</h2><table><thead><tr><th>Date</th><th>From</th><th>To</th><th>Purpose</th><th class="r">Miles</th><th class="r">Allowance</th></tr></thead><tbody>${F.mil.map(r=>`<tr><td class="mono">${fmtD(r.date)}</td><td>${esc(r.from)}</td><td>${esc(r.to)}</td><td>${esc(r.why)}</td><td class="amt r">${r.miles}</td><td class="amt r">${gbp2(r.allow)}</td></tr>`).join('')}<tr class="tot"><td colspan="4">Total</td><td class="amt r">${Math.round(F.miles).toLocaleString()}</td><td class="amt r">${gbp2(F.milT)}</td></tr></tbody></table>
+ <h2>Payments made to HMRC</h2><table><thead><tr><th>Date</th><th>Note</th><th class="r">Amount</th></tr></thead><tbody>${[...(D.hmrc||[])].sort((a,b)=>a.date.localeCompare(b.date)).map(r=>`<tr><td class="mono">${fmtD(r.date)}</td><td>${esc(r.note)}</td><td class="amt r">${gbp2(+r.amt)}</td></tr>`).join('')||'<tr><td colspan="3">None logged</td></tr>'}</tbody></table>
+ <div class="meta">Mileage at HMRC approved rates (45p to 10,000 business miles, 25p thereafter). Home working at HMRC simplified flat rate. Receipts marked "held" are stored digitally and available on request.</div></div>`;goTo('pack')}
+function downloadICS(){const y=+D.ty;const ev=[];const add=(d,t)=>ev.push({d,t});add(new Date(y+1,0,31),'HMRC: self-assessment return and balancing payment due');add(new Date(y+1,3,5),'Tax year end: ISA and pension allowances lapse');add(new Date(y+1,6,31),'HMRC: 2nd payment on account due');add(new Date(y+2,0,31),'HMRC: return and balancing payment for '+tyLabel(y));if(D.mtd!=='no'&&D.mtd!=='unknown'&&+D.mtd<=y)quarters().forEach(Q=>add(Q.due,'MTD quarterly update Q'+Q.n+' due'));
+ const f=d=>d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//ES Practice Books//EN'];ev.forEach((e,i)=>{lines.push('BEGIN:VEVENT','UID:esbooks-'+y+'-'+i+'@es','DTSTAMP:'+f(today())+'T090000Z','DTSTART;VALUE=DATE:'+f(e.d),'SUMMARY:'+e.t,'BEGIN:VALARM','TRIGGER:-P14D','ACTION:DISPLAY','DESCRIPTION:'+e.t+' in 14 days','END:VALARM','END:VEVENT')});lines.push('END:VCALENDAR');dl('ES_tax_deadlines_'+tyLabel(y).replace('/','-')+'.ics',lines.join('\r\n'),'text/calendar')}
+
+// ── HMRC payments ───────────────────────────────────────────
+let editingH=null;
+function addHmrc(){const a=num(q('hAmt').value);if(!q('hDate').value||!(a>0)){toast('Date and amount are needed.');return}D.hmrc=D.hmrc||[];const rec=stamp({id:editingH||uid(),date:q('hDate').value,amt:a,note:q('hNote').value.trim()});if(editingH)D.hmrc=D.hmrc.map(r=>r.id===rec.id?rec:r);else D.hmrc.push(rec);cancelHmrc();save();render();toast('Payment of <b>'+gbp2(a)+'</b> logged.')}
+function editHmrc(id){const r=D.hmrc.find(x=>x.id===id);if(!r)return;editingH=id;q('hDate').value=r.date;q('hAmt').value=r.amt;q('hNote').value=r.note||'';q('hBtn').textContent='Save changes';q('hCancel').style.display='';q('fHmrc').classList.add('editing')}
+function cancelHmrc(){editingH=null;q('hAmt').value='';q('hNote').value='';q('hBtn').textContent='Add payment';q('hCancel').style.display='none';q('fHmrc').classList.remove('editing')}
+
+// ── Receipts (Supabase Storage) ────────────────────────────
+let rcptFile=null;
+function rcptPicked(inp){rcptFile=inp.files[0]||null;if(rcptFile&&rcptFile.size>15*1024*1024){toast('That file is over 15MB; export a smaller PDF or photograph it instead.');rcptFile=null;inp.value=''}q('eRcptL').textContent=rcptFile?'✓ '+(rcptFile.type==='application/pdf'?'PDF':'Photo')+' attached':'📎 Photo / PDF';inp.parentElement.classList.toggle('has',!!rcptFile)}
+function compressImage(file){return new Promise((res,rej)=>{const img=new Image();const url=URL.createObjectURL(file);img.onload=()=>{const max=1600;let w=img.width,h=img.height;if(w>max||h>max){const s=max/Math.max(w,h);w=Math.round(w*s);h=Math.round(h*s)}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);c.toBlob(b=>{URL.revokeObjectURL(url);b?res(b):rej(new Error('compress failed'))},'image/jpeg',.82)};img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('not an image'))};img.src=url})}
+async function uploadReceipt(expId,file){if(!sb||!user){toast('Receipt not saved: sign in first.');return}try{toast('Uploading receipt…');const isPdf=file.type==='application/pdf';const blob=isPdf?file:await compressImage(file);const path=user.id+'/'+expId+(isPdf?'.pdf':'.jpg');const {error}=await sb.storage.from('receipts').upload(path,blob,{contentType:isPdf?'application/pdf':'image/jpeg',upsert:true});if(error)throw error;const r=D.exp.find(x=>x.id===expId);if(r){r.receipt=path;stamp(r);save();render()}toast('Receipt attached.')}catch(e){toast('Receipt upload failed: '+(e.message||e)+'. If this is the first time, the storage bucket may not be set up yet.')}}
+async function openReceipt(path){if(!sb||!user)return;const {data,error}=await sb.storage.from('receipts').createSignedUrl(path,600);if(error){toast('Could not open receipt: '+error.message);return}window.open(data.signedUrl,'_blank')}
+
+// ── Export / backup ────────────────────────────────────────
+function csvEsc(s){s=String(s==null?'':s);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
+function buildCSV(filter,label){const L=[['Type','Date','HMRC category','Category','Payee / source','Description','Amount','Deductible']];const F=yearFigures(+D.ty);F.inc.filter(filter).forEach(r=>L.push(['Income',r.date,'Turnover',r.src,'',r.desc,(+r.amt).toFixed(2),'']));F.exp.filter(filter).forEach(r=>{const c=cat(r.cat);L.push(['Expense',r.date,HMRC[c.hmrc],c.label.split(' (')[0],r.payee,r.desc,(+r.amt).toFixed(2),c.ded?'Yes':'No'])});F.mil.filter(filter).forEach(r=>L.push(['Mileage',r.date,HMRC.travelCosts,'Mileage '+r.miles+' mi',r.from+' → '+r.to,r.why,r.allow.toFixed(2),'Yes']));if(homeRate(+D.ty))L.push(['Home working','',HMRC.home,'Flat rate £'+homeRate(+D.ty)+'/month','','',(label==='year'?12:3)*homeRate(+D.ty)+'.00','Yes']);return L.map(r=>r.map(csvEsc).join(',')).join('\n')}
+function dl(name,text,type){const b=new Blob([text],{type});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function exportQuarterCSV(){const Q=quarters()[+q('qSel').value-1];dl(`ES_Q${Q.n}_${tyLabel(+D.ty).replace('/','-')}_MTD.csv`,buildCSV(r=>inQ(r,Q),'q'),'text/csv')}
+function exportYearCSV(){dl(`ES_${tyLabel(+D.ty).replace('/','-')}_full_year.csv`,buildCSV(()=>true,'year'),'text/csv')}
+function backup(){dl(`ES_Practice_Books_backup_${iso(today())}.json`,JSON.stringify(D,null,1),'application/json')}
+function restore(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);if(!j.income||!j.exp)throw 0;D=merge(D,j);localStorage.setItem(KEY,JSON.stringify(D));render();pushSoon();toast('Restored '+(D.income.length+D.exp.length+D.trips.length)+' records.')}catch(e){toast('That file is not a Practice Books backup.')}};r.readAsText(f)}
+
+// ── Cloud sync ─────────────────────────────────────────────
+const CONFIGURED=!SUPABASE_URL.startsWith('PASTE');let sb=null,user=null,pushTimer=null;
+function syncUI(state,text){const s=q('sync');s.className='sync '+state;q('syncT').innerHTML=text}
+async function initCloud(){if(!CONFIGURED){syncUI('','local only · not configured');return}
+ sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{flowType:'implicit',detectSessionInUrl:true,persistSession:true}});
+ sb.auth.onAuthStateChange((e,s)=>{if(s&&!user){user=s.user;q('gate').style.display='none';afterLogin()}});
+ const {data:{session}}=await sb.auth.getSession();if(session){user=session.user;afterLogin();return}
+ q('gate').style.display='flex';syncUI('off','signed out')}
+async function afterLogin(){syncUI('busy','syncing…');const {data,error}=await sb.from('books').select('data,updated_at').eq('user_id',user.id).maybeSingle();if(error){syncUI('off','sync error · '+error.message);return}
+ D=merge(D,(data&&data.data)||BLANK());localStorage.setItem(KEY,JSON.stringify(D));render();await push()}
+function pushSoon(){if(!sb||!user)return;clearTimeout(pushTimer);syncUI('busy','saving…');pushTimer=setTimeout(push,800)}
+async function push(){if(!sb||!user)return;const {error}=await sb.from('books').upsert({user_id:user.id,data:D,updated_at:new Date().toISOString()},{onConflict:'user_id'});syncUI(error?'off':'ok',error?'not saved · '+error.message:'synced · <button onclick="signOut()">sign out</button>')}
+async function signIn(){const email=q('gEmail').value.trim(),password=q('gPass').value;if(!email||!password){q('gMsg').textContent='Email and password both needed.';return}q('gMsg').textContent='Signing in…';const {error}=await sb.auth.signInWithPassword({email,password});if(error)q('gMsg').textContent=error.message}
+async function signOut(){await sb.auth.signOut();location.reload()}
+window.addEventListener('online',()=>{if(user)push()});
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>goTo(b.dataset.s));
+fetch('rates.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.PA){Object.assign(TX,j);render()}}).catch(()=>{});
+render();initCloud();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
