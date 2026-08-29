@@ -1,0 +1,43 @@
+{
+ "_comment": "Tax constants for the tax year given in 'year'. Edit this one file on GitHub each April; the app loads it on next open and warns when it's out of date.",
+ "PA": 12570,
+ "BRT": 37700,
+ "HR": 125140,
+ "C4L": 12570,
+ "C4U": 50270,
+ "SPT": 6845,
+ "AA": 60000,
+ "POA_MIN": 1000,
+ "ISA": 20000,
+ "VAT": 90000,
+ "EMPNI": 0.15,
+ "CB1": 26.05,
+ "CBO": 17.25,
+ "SL": {
+  "1": {
+   "t": 26065,
+   "r": 0.09
+  },
+  "2": {
+   "t": 28470,
+   "r": 0.09
+  },
+  "4": {
+   "t": 32745,
+   "r": 0.09
+  },
+  "5": {
+   "t": 25000,
+   "r": 0.09
+  },
+  "pg": {
+   "t": 21000,
+   "r": 0.06
+  }
+ },
+ "year": 2026,
+ "CGT_AEA": 3000,
+ "CGT_PROC": 50000,
+ "CGT_LO": 0.18,
+ "CGT_HI": 0.24
+}
