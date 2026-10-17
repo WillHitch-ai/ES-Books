@@ -1,0 +1,67 @@
+{
+ "_comment": "Tax constants for the tax year given in 'year'. Edit this one file on GitHub each April; the app loads it on next open and warns when it's out of date. DA/DIV = dividend allowance and rates; PSA = personal savings allowance (basic/higher/additional); SRS = starting rate for savings; CT_* = corporation tax; ERNI/ST = employer NI and its threshold; PT/UEL/EENI = employee NI.",
+ "PA": 12570,
+ "BRT": 37700,
+ "HR": 125140,
+ "C4L": 12570,
+ "C4U": 50270,
+ "SPT": 6845,
+ "AA": 60000,
+ "POA_MIN": 1000,
+ "ISA": 20000,
+ "VAT": 90000,
+ "EMPNI": 0.15,
+ "CB1": 26.05,
+ "CBO": 17.25,
+ "SL": {
+  "1": {
+   "t": 26065,
+   "r": 0.09
+  },
+  "2": {
+   "t": 28470,
+   "r": 0.09
+  },
+  "4": {
+   "t": 32745,
+   "r": 0.09
+  },
+  "5": {
+   "t": 25000,
+   "r": 0.09
+  },
+  "pg": {
+   "t": 21000,
+   "r": 0.06
+  }
+ },
+ "year": 2026,
+ "CGT_AEA": 3000,
+ "CGT_PROC": 50000,
+ "CGT_LO": 0.18,
+ "CGT_HI": 0.24,
+ "DA": 500,
+ "DIV": [
+  0.1075,
+  0.3575,
+  0.3935
+ ],
+ "PSA": [
+  1000,
+  500,
+  0
+ ],
+ "SRS": 5000,
+ "CT_S": 0.19,
+ "CT_M": 0.25,
+ "CT_LO": 50000,
+ "CT_HI": 250000,
+ "ERNI": 0.15,
+ "ST": 5000,
+ "PT": 12570,
+ "UEL": 50270,
+ "EENI": [
+  0.08,
+  0.02
+ ]
+}
